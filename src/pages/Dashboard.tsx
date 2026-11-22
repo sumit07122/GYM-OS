@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTenant } from '@/lib/tenant/context';
 import { gymStore } from '@/lib/supabase/store';
 import { MetricCard } from '@/components/shared/MetricCard';
@@ -44,15 +44,15 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
       {/* Top Banner & Quick Actions */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-[#111827] via-[#161F32] to-[#111827] border border-white/10 rounded-2xl p-6 shadow-card">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-100 dark:bg-gradient-to-r dark:from-[#111827] dark:via-[#161F32] dark:to-[#111827] border border-slate-200 dark:border-white/10 rounded-2xl p-6 shadow-sm dark:shadow-card">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-extrabold text-white tracking-tight">
+            <h1 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Welcome to {currentGym.name}
             </h1>
             <Badge variant="active">Live Production ERP</Badge>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
             Real-time multi-tenant command center. Operating on standard Asia/Kolkata timezone.
           </p>
         </div>
@@ -87,7 +87,7 @@ export const Dashboard: React.FC = () => {
           value={todayAttendance.length}
           subValue="Peak: 6:00 PM - 8:30 PM"
           icon={QrCode}
-          iconColor="text-indigo-400 bg-indigo-500/10 border-indigo-500/20"
+          iconColor="text-indigo-500 dark:text-indigo-400 bg-indigo-500/10 border-indigo-500/20"
         />
         <MetricCard
           label="Monthly Revenue (MTD)"
@@ -95,7 +95,7 @@ export const Dashboard: React.FC = () => {
           subValue="INR Collections"
           trend={{ value: '+14.2% vs last month', isPositive: true }}
           icon={CreditCard}
-          iconColor="text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+          iconColor="text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
         />
         <MetricCard
           label="Expiring / Overdue Dues"
@@ -103,7 +103,7 @@ export const Dashboard: React.FC = () => {
           subValue={`Dues: ${formatINR(totalDues, false)}`}
           trend={{ value: 'Action Required', isPositive: false }}
           icon={AlertCircle}
-          iconColor="text-amber-400 bg-amber-500/10 border-amber-500/20"
+          iconColor="text-amber-500 dark:text-amber-400 bg-amber-500/10 border-amber-500/20"
         />
       </div>
 
@@ -112,34 +112,34 @@ export const Dashboard: React.FC = () => {
         {/* Left Column (2 Cols): Live Check-in Feed */}
         <div className="lg:col-span-2 space-y-6">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
+            <CardHeader className="flex flex-row items-center justify-between border-b border-slate-200 dark:border-white/10 pb-4">
               <div>
                 <CardTitle className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-emerald-400" />
+                  <Clock className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   Today's Live Attendance Stream
                 </CardTitle>
-                <p className="text-xs text-slate-400 mt-0.5">Real-time check-ins verified at the front desk</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Real-time check-ins verified at the front desk</p>
               </div>
               <Button variant="ghost" size="sm" onClick={() => navigate(`/gym/${slug}/attendance`)}>
                 View Terminal <ArrowRight className="w-3.5 h-3.5 ml-1" />
               </Button>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-4">
               {todayAttendance.length === 0 ? (
-                <div className="py-8 text-center text-xs text-slate-500">
+                <div className="py-8 text-center text-xs text-slate-500 dark:text-slate-400">
                   No check-ins recorded yet today. Scan a QR code or use manual check-in.
                 </div>
               ) : (
-                <div className="divide-y divide-white/5">
+                <div className="divide-y divide-slate-200 dark:divide-white/5">
                   {todayAttendance.slice(0, 5).map((att) => (
                     <div key={att.id} className="py-3 flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-xs text-slate-300">
+                        <div className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 flex items-center justify-center font-bold text-xs text-slate-700 dark:text-slate-300">
                           {att.member?.full_name.charAt(0) || 'M'}
                         </div>
                         <div>
-                          <p className="text-xs font-semibold text-slate-200">{att.member?.full_name}</p>
-                          <p className="text-[11px] text-slate-400 font-mono">
+                          <p className="text-xs font-semibold text-slate-900 dark:text-slate-200">{att.member?.full_name}</p>
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                             {att.member?.member_code} • {att.method === 'qr_scan' ? 'QR Code Pass' : 'Manual Reception'}
                           </p>
                         </div>
@@ -148,7 +148,7 @@ export const Dashboard: React.FC = () => {
                         <Badge variant="active" className="text-[10px]">
                           {formatDateTime(att.check_in_time)}
                         </Badge>
-                        <p className="text-[10px] text-slate-500 mt-0.5">Verified by {att.verified_by_name}</p>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Verified by {att.verified_by_name}</p>
                       </div>
                     </div>
                   ))}
@@ -159,29 +159,29 @@ export const Dashboard: React.FC = () => {
 
           {/* Revenue Breakdown by Payment Method */}
           <Card>
-            <CardHeader>
+            <CardHeader className="border-b border-slate-200 dark:border-white/10 pb-4">
               <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-emerald-400" />
+                <TrendingUp className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 Payment Method Collection Breakdown
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-4">
               <div className="grid grid-cols-3 gap-4 text-center">
-                <div className="bg-[#090D16] p-3.5 rounded-lg border border-white/5">
-                  <p className="text-xs text-slate-400 font-medium">UPI / QR (BHIM/GPay)</p>
-                  <p className="text-base font-bold font-mono text-emerald-400 mt-1">
+                <div className="bg-slate-50 dark:bg-[#090D16] p-3.5 rounded-lg border border-slate-200 dark:border-white/5">
+                  <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">UPI / QR (BHIM/GPay)</p>
+                  <p className="text-base font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-1">
                     {formatINR(payments.filter(p => p.payment_method === 'upi').reduce((a, b) => a + b.amount_paid, 0), false)}
                   </p>
                 </div>
-                <div className="bg-[#090D16] p-3.5 rounded-lg border border-white/5">
-                  <p className="text-xs text-slate-400 font-medium">Debit/Credit Cards</p>
-                  <p className="text-base font-bold font-mono text-indigo-400 mt-1">
+                <div className="bg-slate-50 dark:bg-[#090D16] p-3.5 rounded-lg border border-slate-200 dark:border-white/5">
+                  <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Debit/Credit Cards</p>
+                  <p className="text-base font-bold font-mono text-indigo-500 dark:text-indigo-400 mt-1">
                     {formatINR(payments.filter(p => p.payment_method === 'card').reduce((a, b) => a + b.amount_paid, 0), false)}
                   </p>
                 </div>
-                <div className="bg-[#090D16] p-3.5 rounded-lg border border-white/5">
-                  <p className="text-xs text-slate-400 font-medium">Cash Collections</p>
-                  <p className="text-base font-bold font-mono text-amber-400 mt-1">
+                <div className="bg-slate-50 dark:bg-[#090D16] p-3.5 rounded-lg border border-slate-200 dark:border-white/5">
+                  <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Cash Collections</p>
+                  <p className="text-base font-bold font-mono text-amber-500 dark:text-amber-400 mt-1">
                     {formatINR(payments.filter(p => p.payment_method === 'cash').reduce((a, b) => a + b.amount_paid, 0), false)}
                   </p>
                 </div>
@@ -193,15 +193,15 @@ export const Dashboard: React.FC = () => {
         {/* Right Column: Upcoming Renewals & Alert Feed */}
         <div className="space-y-6">
           <Card>
-            <CardHeader>
+            <CardHeader className="border-b border-slate-200 dark:border-white/10 pb-4">
               <CardTitle className="flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-amber-400" />
+                <AlertCircle className="w-4 h-4 text-amber-500 dark:text-amber-400" />
                 Upcoming Expiries (7 Days)
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-4">
               {expiringMembers.length === 0 ? (
-                <div className="py-6 text-center text-xs text-slate-500">
+                <div className="py-6 text-center text-xs text-slate-500 dark:text-slate-400">
                   All memberships active. No expiries in the next 7 days.
                 </div>
               ) : (
@@ -209,11 +209,11 @@ export const Dashboard: React.FC = () => {
                   {expiringMembers.map((m) => {
                     const status = getExpiryStatus(m.current_subscription!.end_date);
                     return (
-                      <div key={m.id} className="p-3 bg-[#0B0F19] border border-white/5 rounded-lg flex items-center justify-between">
+                      <div key={m.id} className="p-3 bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-white/5 rounded-lg flex items-center justify-between">
                         <div>
-                          <p className="text-xs font-semibold text-slate-200">{m.full_name}</p>
-                          <p className="text-[10px] text-slate-400 font-mono">{m.phone}</p>
-                          <p className="text-[10px] text-amber-400 font-medium mt-0.5">{status.label}</p>
+                          <p className="text-xs font-semibold text-slate-900 dark:text-slate-200">{m.full_name}</p>
+                          <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">{m.phone}</p>
+                          <p className="text-[10px] text-amber-500 dark:text-amber-400 font-medium mt-0.5">{status.label}</p>
                         </div>
                         <Button
                           variant="outline"
@@ -233,13 +233,13 @@ export const Dashboard: React.FC = () => {
 
           {/* White-Label Quick Notice */}
           <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl space-y-2">
-            <div className="flex items-center gap-2 text-emerald-400 font-semibold text-xs">
+            <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-semibold text-xs">
               <Sparkles className="w-4 h-4" />
               White-Label Member Portal Ready
             </div>
-            <p className="text-[11px] text-slate-300 leading-relaxed">
+            <p className="text-[11px] text-slate-700 dark:text-slate-300 leading-relaxed">
               Members can access their digital QR pass, view workout splits, and download GST receipts at{' '}
-              <span className="font-mono text-emerald-300">/gym/{slug}/member</span>.
+              <span className="font-mono text-emerald-600 dark:text-emerald-300 font-bold">/gym/{slug}/member</span>.
             </p>
             <Button
               variant="secondary"

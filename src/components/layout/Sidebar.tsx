@@ -15,9 +15,15 @@ import {
   Settings,
   ShieldAlert,
   Sparkles,
+  X,
 } from 'lucide-react';
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+  onClose?: () => void;
+  isMobile?: boolean;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ onClose, isMobile }) => {
   const { currentGym, allGyms, setGym, branding, activeRole } = useTenant();
   const slug = currentGym.slug;
 
@@ -83,18 +89,30 @@ export const Sidebar: React.FC = () => {
     <aside className="w-64 bg-white dark:bg-[#0B0F19] border-r border-slate-200 dark:border-white/10 flex flex-col h-screen select-none shrink-0 transition-colors duration-150">
       {/* Brand & Tenant Header */}
       <div className="p-4 border-b border-slate-200 dark:border-white/10">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-glow overflow-hidden shrink-0">
-            {branding.logo_url ? (
-              <img src={branding.logo_url} alt={currentGym.name} className="w-full h-full object-cover" />
-            ) : (
-              <Dumbbell className="w-5 h-5 text-white" />
-            )}
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-glow overflow-hidden shrink-0">
+              {branding.logo_url ? (
+                <img src={branding.logo_url} alt={currentGym.name} className="w-full h-full object-cover" />
+              ) : (
+                <Dumbbell className="w-5 h-5 text-white" />
+              )}
+            </div>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate tracking-tight">{currentGym.name}</h1>
+              <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono truncate">slug: {currentGym.slug}</p>
+            </div>
           </div>
-          <div className="min-w-0 flex-1">
-            <h1 className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate tracking-tight">{currentGym.name}</h1>
-            <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono truncate">slug: {currentGym.slug}</p>
-          </div>
+
+          {isMobile && onClose && (
+            <button
+              type="button"
+              onClick={onClose}
+              className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-white/5"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
         </div>
 
         {/* Tenant Switcher (if multiple gyms) */}
@@ -143,6 +161,9 @@ export const Sidebar: React.FC = () => {
                 <NavLink
                   key={item.label}
                   to={item.path}
+                  onClick={() => {
+                    if (isMobile && onClose) onClose();
+                  }}
                   className={({ isActive }) =>
                     cn(
                       'flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-medium transition-colors',

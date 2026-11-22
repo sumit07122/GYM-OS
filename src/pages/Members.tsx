@@ -13,9 +13,6 @@ import {
   Search,
   Plus,
   Upload,
-  Download,
-  Filter,
-  Phone,
   Calendar,
   CheckCircle2,
   XCircle,
@@ -126,11 +123,11 @@ export const Members: React.FC = () => {
       {/* Header & Main Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
-            <Users className="w-5 h-5 text-emerald-400" />
+          <h1 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+            <Users className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             Member Directory
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
             Total {members.length} registered members • Live biometric, subscription & contact profiles
           </p>
         </div>
@@ -148,16 +145,16 @@ export const Members: React.FC = () => {
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-[#111827] border border-white/10 rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-card">
+      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-white/10 rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm dark:shadow-card">
         {/* Search Input */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-500" />
+          <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400 dark:text-slate-500" />
           <input
             type="text"
             placeholder="Search by Member Code, Name, or Mobile..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-[#0D1322] border border-white/10 rounded-lg pl-9 pr-3 py-2 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-emerald-500"
+            className="w-full bg-slate-50 dark:bg-[#0D1322] border border-slate-200 dark:border-white/10 rounded-lg pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-emerald-500"
           />
         </div>
 
@@ -169,8 +166,8 @@ export const Members: React.FC = () => {
               onClick={() => setStatusFilter(status)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium uppercase tracking-wider transition-colors select-none whitespace-nowrap ${
                 statusFilter === status
-                  ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+                  ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5'
               }`}
             >
               {status} ({status === 'all' ? members.length : members.filter((m) => m.status === status).length})
@@ -180,10 +177,10 @@ export const Members: React.FC = () => {
       </div>
 
       {/* Members Data Table */}
-      <div className="bg-[#111827] border border-white/10 rounded-xl overflow-hidden shadow-card">
+      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-white/10 rounded-xl overflow-hidden shadow-sm dark:shadow-card">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#0B0F19] border-b border-white/10 text-slate-400 uppercase font-semibold">
+            <thead className="bg-slate-50 dark:bg-[#0B0F19] border-b border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 uppercase font-semibold">
               <tr>
                 <th className="py-3 px-4">Member</th>
                 <th className="py-3 px-4">Contact</th>
@@ -193,10 +190,10 @@ export const Members: React.FC = () => {
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 text-slate-300">
+            <tbody className="divide-y divide-slate-200 dark:divide-white/5 text-slate-700 dark:text-slate-300">
               {filteredMembers.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-slate-500 text-xs">
+                  <td colSpan={6} className="py-12 text-center text-slate-500 dark:text-slate-400 text-xs">
                     No members found matching your search and filter criteria.
                   </td>
                 </tr>
@@ -209,29 +206,29 @@ export const Members: React.FC = () => {
                     <tr
                       key={member.id}
                       onClick={() => setSelectedMember(member)}
-                      className="hover:bg-[#1E293B]/40 transition-colors cursor-pointer"
+                      className="hover:bg-slate-50 dark:hover:bg-[#1E293B]/40 transition-colors cursor-pointer"
                     >
                       {/* Name & Code */}
                       <td className="py-3 px-4 flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-xs text-slate-200 shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 flex items-center justify-center font-bold text-xs text-slate-800 dark:text-slate-200 shrink-0">
                           {member.full_name.charAt(0)}
                         </div>
                         <div>
-                          <p className="font-semibold text-slate-100">{member.full_name}</p>
-                          <p className="text-[10px] font-mono text-emerald-400">{member.member_code}</p>
+                          <p className="font-semibold text-slate-900 dark:text-slate-100">{member.full_name}</p>
+                          <p className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400">{member.member_code}</p>
                         </div>
                       </td>
 
                       {/* Phone & Email */}
                       <td className="py-3 px-4">
-                        <p className="font-mono text-slate-200">{member.phone}</p>
-                        <p className="text-[10px] text-slate-500">{member.email || '-'}</p>
+                        <p className="font-mono text-slate-800 dark:text-slate-200">{member.phone}</p>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400">{member.email || '-'}</p>
                       </td>
 
                       {/* Active Plan */}
                       <td className="py-3 px-4">
-                        <p className="font-medium text-slate-200">{sub?.plan?.name || 'No Plan Active'}</p>
-                        <p className="text-[10px] text-slate-500">Joined: {formatDate(member.joining_date)}</p>
+                        <p className="font-medium text-slate-800 dark:text-slate-200">{sub?.plan?.name || 'No Plan Active'}</p>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400">Joined: {formatDate(member.joining_date)}</p>
                       </td>
 
                       {/* Expiry */}
@@ -239,10 +236,10 @@ export const Members: React.FC = () => {
                         {sub ? (
                           <div>
                             <p className="font-mono">{formatDate(sub.end_date)}</p>
-                            <p className="text-[10px] text-amber-400">{expiry?.label}</p>
+                            <p className="text-[10px] text-amber-500 dark:text-amber-400">{expiry?.label}</p>
                           </div>
                         ) : (
-                          <span className="text-slate-500">-</span>
+                          <span className="text-slate-400">-</span>
                         )}
                       </td>
 
@@ -288,20 +285,21 @@ export const Members: React.FC = () => {
       {/* Member Details Drawer */}
       {selectedMember && (
         <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-md bg-[#111827] border-l border-white/10 h-full p-6 overflow-y-auto space-y-6 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+          <div className="w-full max-w-md bg-white dark:bg-[#111827] border-l border-slate-200 dark:border-white/10 h-full p-6 overflow-y-auto space-y-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold text-base flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-600 dark:text-emerald-300 font-bold text-base flex items-center justify-center">
                   {selectedMember.full_name.charAt(0)}
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-slate-100">{selectedMember.full_name}</h3>
-                  <p className="text-xs font-mono text-emerald-400">{selectedMember.member_code}</p>
+                  <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">{selectedMember.full_name}</h3>
+                  <p className="text-xs font-mono text-emerald-600 dark:text-emerald-400">{selectedMember.member_code}</p>
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => setSelectedMember(null)}
-                className="p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-white/5"
+                className="p-1.5 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -309,35 +307,35 @@ export const Members: React.FC = () => {
 
             <div className="space-y-4 text-xs">
               <div>
-                <span className="text-slate-500 uppercase tracking-wider font-semibold">Contact Details</span>
+                <span className="text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Contact Details</span>
                 <div className="mt-1 space-y-1">
-                  <p className="text-slate-200 font-mono">Mobile: {selectedMember.phone}</p>
-                  <p className="text-slate-200">Email: {selectedMember.email || 'None'}</p>
-                  <p className="text-slate-200">Address: {selectedMember.address || 'None'}</p>
+                  <p className="text-slate-800 dark:text-slate-200 font-mono">Mobile: {selectedMember.phone}</p>
+                  <p className="text-slate-800 dark:text-slate-200">Email: {selectedMember.email || 'None'}</p>
+                  <p className="text-slate-800 dark:text-slate-200">Address: {selectedMember.address || 'None'}</p>
                 </div>
               </div>
 
               <div>
-                <span className="text-slate-500 uppercase tracking-wider font-semibold">Emergency Contact</span>
+                <span className="text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Emergency Contact</span>
                 <div className="mt-1 space-y-1">
-                  <p className="text-slate-200">{selectedMember.emergency_contact_name || 'None'}</p>
-                  <p className="text-slate-200 font-mono">{selectedMember.emergency_contact_phone || 'None'}</p>
+                  <p className="text-slate-800 dark:text-slate-200">{selectedMember.emergency_contact_name || 'None'}</p>
+                  <p className="text-slate-800 dark:text-slate-200 font-mono">{selectedMember.emergency_contact_phone || 'None'}</p>
                 </div>
               </div>
 
               <div>
-                <span className="text-slate-500 uppercase tracking-wider font-semibold">Medical / Fitness Notes</span>
-                <p className="mt-1 text-slate-300 bg-[#090D16] p-2.5 rounded border border-white/5">
+                <span className="text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Medical / Fitness Notes</span>
+                <p className="mt-1 text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-[#090D16] p-2.5 rounded border border-slate-200 dark:border-white/5">
                   {selectedMember.medical_conditions || 'No health conditions declared. Approved for all training.'}
                 </p>
               </div>
 
               <div>
-                <span className="text-slate-500 uppercase tracking-wider font-semibold">Subscription Validity</span>
-                <div className="mt-1 p-3 bg-[#090D16] rounded border border-white/5 space-y-1">
-                  <p className="font-semibold text-slate-100">{selectedMember.current_subscription?.plan?.name || 'No active plan'}</p>
+                <span className="text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Subscription Validity</span>
+                <div className="mt-1 p-3 bg-slate-50 dark:bg-[#090D16] rounded border border-slate-200 dark:border-white/5 space-y-1">
+                  <p className="font-semibold text-slate-900 dark:text-slate-100">{selectedMember.current_subscription?.plan?.name || 'No active plan'}</p>
                   {selectedMember.current_subscription && (
-                    <p className="text-slate-400">
+                    <p className="text-slate-600 dark:text-slate-400">
                       Valid: {formatDate(selectedMember.current_subscription.start_date)} to {formatDate(selectedMember.current_subscription.end_date)}
                     </p>
                   )}
@@ -345,7 +343,7 @@ export const Members: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-white/10 flex gap-2">
+            <div className="pt-4 border-t border-slate-200 dark:border-white/10 flex gap-2">
               <Button
                 variant="outline"
                 size="sm"
@@ -401,11 +399,11 @@ export const Members: React.FC = () => {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Gender</label>
+              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Gender</label>
               <select
                 value={newGender}
                 onChange={(e) => setNewGender(e.target.value)}
-                className="w-full bg-[#0D1322] border border-white/10 rounded-md px-3 py-2 text-xs text-slate-100"
+                className="w-full bg-slate-50 dark:bg-[#0D1322] border border-slate-200 dark:border-white/10 rounded-md px-3 py-2 text-xs text-slate-900 dark:text-slate-100"
               >
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -422,11 +420,11 @@ export const Members: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">Select Membership Plan</label>
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Select Membership Plan</label>
             <select
               value={newPlanId}
               onChange={(e) => setNewPlanId(e.target.value)}
-              className="w-full bg-[#0D1322] border border-white/10 rounded-md px-3 py-2 text-xs text-slate-100"
+              className="w-full bg-slate-50 dark:bg-[#0D1322] border border-slate-200 dark:border-white/10 rounded-md px-3 py-2 text-xs text-slate-900 dark:text-slate-100"
             >
               {plans.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -458,7 +456,7 @@ export const Members: React.FC = () => {
             onChange={(e) => setNewAddress(e.target.value)}
           />
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-white/10">
+          <div className="flex justify-end gap-2 pt-3 border-t border-slate-200 dark:border-white/10">
             <Button variant="secondary" size="sm" type="button" onClick={() => setIsAddModalOpen(false)}>
               Cancel
             </Button>
@@ -477,10 +475,10 @@ export const Members: React.FC = () => {
         description="Paste comma-separated member records in format: Full Name, Phone, Email, Gender"
       >
         <div className="space-y-4 text-xs">
-          <p className="text-slate-400">
+          <p className="text-slate-600 dark:text-slate-400">
             Example:<br />
-            <span className="font-mono text-emerald-400">Ravi Shankar, 9811234567, ravi@gmail.com, Male</span><br />
-            <span className="font-mono text-emerald-400">Pooja Hegde, 9876543210, pooja@outlook.com, Female</span>
+            <span className="font-mono text-emerald-600 dark:text-emerald-400">Ravi Shankar, 9811234567, ravi@gmail.com, Male</span><br />
+            <span className="font-mono text-emerald-600 dark:text-emerald-400">Pooja Hegde, 9876543210, pooja@outlook.com, Female</span>
           </p>
 
           <textarea
@@ -488,11 +486,11 @@ export const Members: React.FC = () => {
             value={bulkCsvText}
             onChange={(e) => setBulkCsvText(e.target.value)}
             placeholder="Paste CSV lines here..."
-            className="w-full bg-[#0D1322] border border-white/10 rounded-md p-3 text-xs font-mono text-slate-100 placeholder:text-slate-600 focus:outline-none focus:border-emerald-500"
+            className="w-full bg-slate-50 dark:bg-[#0D1322] border border-slate-200 dark:border-white/10 rounded-md p-3 text-xs font-mono text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:border-emerald-500"
           />
 
           {bulkMessage && (
-            <p className="text-xs text-emerald-400 font-semibold bg-emerald-500/10 p-2 rounded border border-emerald-500/20">
+            <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-500/10 p-2 rounded border border-emerald-500/20">
               {bulkMessage}
             </p>
           )}

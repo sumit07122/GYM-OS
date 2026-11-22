@@ -75,11 +75,11 @@ export const Leads: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
-            <UserCheck className="w-5 h-5 text-emerald-400" />
+          <h1 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+            <UserCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             Leads & Inquiries CRM
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
             Track prospective member inquiries, schedule trials, and maximize gym conversion rates
           </p>
         </div>

@@ -591,6 +591,20 @@ class GymStore {
     return this.state.gyms.find(g => g.id === idOrSlug || g.slug === idOrSlug);
   }
 
+  getGymBySlug(slug: string): Gym | undefined {
+    return this.state.gyms.find(g => g.slug === slug);
+  }
+
+  updateGym(gymId: string, updates: Partial<Gym>): Gym | undefined {
+    const idx = this.state.gyms.findIndex(g => g.id === gymId);
+    if (idx !== -1) {
+      this.state.gyms[idx] = { ...this.state.gyms[idx], ...updates };
+      this.saveState(this.state);
+      return this.state.gyms[idx];
+    }
+    return undefined;
+  }
+
   getAllGyms(): Gym[] {
     return this.state.gyms;
   }

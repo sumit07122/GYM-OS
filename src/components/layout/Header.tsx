@@ -4,10 +4,14 @@ import { useTenant } from '@/lib/tenant/context';
 import { useTheme } from '@/lib/theme/context';
 import { useAuth } from '@/lib/auth/context';
 import { format } from 'date-fns';
-import { Bell, Search, ShieldAlert, Sparkles, CheckCircle2, Sun, Moon, Laptop, LogOut } from 'lucide-react';
+import { Bell, Search, ShieldAlert, Sparkles, CheckCircle2, Sun, Moon, Laptop, LogOut, Menu } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  onToggleSidebar?: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
   const { currentGym, activeRole, currentUser } = useTenant();
   const { theme, setTheme } = useTheme();
   const { signOut } = useAuth();
@@ -20,30 +24,41 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="h-16 bg-white/90 dark:bg-[#0B0F19]/90 backdrop-blur-md border-b border-slate-200 dark:border-white/10 px-6 flex items-center justify-between sticky top-0 z-30 select-none transition-colors duration-150">
-      {/* Left: Gym Badge & Date */}
-      <div className="flex items-center gap-4">
+    <header className="h-16 bg-white/90 dark:bg-[#0B0F19]/90 backdrop-blur-md border-b border-slate-200 dark:border-white/10 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 select-none transition-colors duration-150">
+      {/* Left: Mobile Menu Toggle + Gym Badge & Date */}
+      <div className="flex items-center gap-3">
+        {onToggleSidebar && (
+          <button
+            type="button"
+            onClick={onToggleSidebar}
+            aria-label="Toggle navigation menu"
+            className="lg:hidden p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        )}
+
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100">{currentGym.name}</h2>
-            <Badge variant="active" className="text-[10px] py-0 px-1.5 gap-1">
+            <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate max-w-[140px] sm:max-w-xs">{currentGym.name}</h2>
+            <Badge variant="active" className="hidden sm:inline-flex text-[10px] py-0 px-1.5 gap-1">
               <CheckCircle2 className="w-3 h-3" />
               Verified Tenant
             </Badge>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400">{todayFormatted}</p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 hidden sm:block">{todayFormatted}</p>
         </div>
       </div>
 
       {/* Center Search / Kiosk helper */}
-      <div className="hidden md:flex items-center w-80 bg-slate-100 dark:bg-[#111827] border border-slate-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-xs text-slate-500 dark:text-slate-400">
+      <div className="hidden xl:flex items-center w-80 bg-slate-100 dark:bg-[#111827] border border-slate-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-xs text-slate-500 dark:text-slate-400">
         <Search className="w-4 h-4 mr-2 text-slate-400 dark:text-slate-500" />
         <span className="truncate">Quick Member Search (M-001 or Phone)...</span>
         <kbd className="ml-auto text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-1.5 py-0.5 rounded border border-slate-300 dark:border-slate-700">Ctrl+K</kbd>
       </div>
 
       {/* Right: Theme Toggle, Notifications, User Role Badge & Sign Out */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         {/* Theme Toggle (Light / Dark / System) */}
         <div className="flex items-center bg-slate-100 dark:bg-[#111827] p-1 rounded-lg border border-slate-200 dark:border-white/10 text-xs">
           <button
@@ -85,11 +100,11 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Authenticated Role Status */}
-        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+        <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
           {activeRole === 'member' ? (
             <>
               <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
-              <span>Member Account</span>
+              <span>Member Pass</span>
             </>
           ) : (
             <>

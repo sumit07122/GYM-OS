@@ -25,11 +25,11 @@ export const Staff: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
-            <Users className="w-5 h-5 text-emerald-400" />
+          <h1 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+            <Users className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             Staff & Trainer Management
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
             Manage fitness trainers, reception staff, operational roles, and salary compensation
           </p>
         </div>

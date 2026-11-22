@@ -83,11 +83,11 @@ export const Finance: React.FC = () => {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
-            <Receipt className="w-5 h-5 text-emerald-400" />
+          <h1 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+            <Receipt className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             Payments & Financial POS
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
             Complete financial ledger, GST tax reporting (18%), and downloadable invoices
           </p>
         </div>
@@ -112,7 +112,7 @@ export const Finance: React.FC = () => {
           value={formatINR(totalTax, false)}
           subValue="CGST 9% + SGST 9%"
           icon={Receipt}
-          iconColor="text-indigo-400 bg-indigo-500/10 border-indigo-500/20"
+          iconColor="text-indigo-500 dark:text-indigo-400 bg-indigo-500/10 border-indigo-500/20"
         />
         <MetricCard
           label="Outstanding Dues"
@@ -120,7 +120,7 @@ export const Finance: React.FC = () => {
           subValue="Pending balance ledger"
           trend={{ value: 'Action Required', isPositive: false }}
           icon={DollarSign}
-          iconColor="text-amber-400 bg-amber-500/10 border-amber-500/20"
+          iconColor="text-amber-500 dark:text-amber-400 bg-amber-500/10 border-amber-500/20"
         />
         <MetricCard
           label="Net Operating Profit"
@@ -128,15 +128,15 @@ export const Finance: React.FC = () => {
           subValue={`Expenses: ${formatINR(totalExpenses, false)}`}
           trend={{ value: 'Positive Margin', isPositive: true }}
           icon={TrendingUp}
-          iconColor="text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+          iconColor="text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
         />
       </div>
 
       {/* Transaction History Data Table */}
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between border-b border-white/10 pb-4">
+        <CardHeader className="flex flex-row items-center justify-between border-b border-slate-200 dark:border-white/10 pb-4">
           <CardTitle className="text-sm font-bold flex items-center gap-2">
-            <FileText className="w-4 h-4 text-emerald-400" />
+            <FileText className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             Payment Transactions & Consecutive Invoices
           </CardTitle>
           <Badge variant="neutral" className="text-xs">
@@ -147,67 +147,61 @@ export const Finance: React.FC = () => {
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#0B0F19] border-b border-white/10 text-slate-400 uppercase font-semibold">
+              <thead className="bg-slate-50 dark:bg-[#0B0F19] border-b border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 uppercase font-semibold">
                 <tr>
                   <th className="py-3 px-4">Invoice #</th>
                   <th className="py-3 px-4">Member</th>
-                  <th className="py-3 px-4">Date</th>
-                  <th className="py-3 px-4">Method</th>
-                  <th className="py-3 px-4 text-right">Tax (GST)</th>
+                  <th className="py-3 px-4">Description</th>
+                  <th className="py-3 px-4">Payment Mode</th>
                   <th className="py-3 px-4 text-right">Amount Paid</th>
                   <th className="py-3 px-4 text-right">Balance Due</th>
-                  <th className="py-3 px-4 text-right">Receipt</th>
+                  <th className="py-3 px-4 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 text-slate-300">
+              <tbody className="divide-y divide-slate-200 dark:divide-white/5 text-slate-700 dark:text-slate-300">
                 {payments.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="py-12 text-center text-slate-500 text-xs">
-                      No payment transactions recorded yet.
+                    <td colSpan={7} className="py-12 text-center text-slate-500 dark:text-slate-400 text-xs">
+                      No payment records found. Collect fee to generate invoice.
                     </td>
                   </tr>
                 ) : (
                   payments.map((p) => (
-                    <tr key={p.id} className="hover:bg-[#1E293B]/40 transition-colors">
-                      {/* Invoice Number */}
-                      <td className="py-3 px-4 font-mono font-semibold text-emerald-400">
+                    <tr key={p.id} className="hover:bg-slate-50 dark:hover:bg-[#1E293B]/40 transition-colors">
+                      {/* Invoice No */}
+                      <td className="py-3 px-4 font-mono font-bold text-emerald-600 dark:text-emerald-400">
                         {p.invoice_number}
                       </td>
 
                       {/* Member */}
                       <td className="py-3 px-4">
-                        <p className="font-semibold text-slate-100">{p.member?.full_name || 'Member'}</p>
-                        <p className="text-[10px] text-slate-500 font-mono">{p.member?.member_code}</p>
+                        <p className="font-semibold text-slate-900 dark:text-slate-100">{p.member?.full_name || 'Member'}</p>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400">{formatDate(p.created_at)}</p>
                       </td>
 
-                      {/* Date */}
-                      <td className="py-3 px-4 text-slate-400">
-                        {formatDateTime(p.created_at)}
+                      {/* Type */}
+                      <td className="py-3 px-4">
+                        <span className="capitalize">{p.payment_type.replace('_', ' ')}</span>
                       </td>
 
-                      {/* Payment Method */}
+                      {/* Method */}
                       <td className="py-3 px-4">
                         <Badge variant="neutral" className="uppercase text-[10px]">
                           {p.payment_method}
                         </Badge>
                       </td>
 
-                      {/* Tax */}
-                      <td className="py-3 px-4 text-right font-mono text-slate-400">
-                        {formatINR(p.tax_amount)}
-                      </td>
-
                       {/* Amount Paid */}
-                      <td className="py-3 px-4 text-right font-mono font-bold text-emerald-400">
+                      <td className="py-3 px-4 text-right font-mono font-bold text-emerald-600 dark:text-emerald-400">
                         {formatINR(p.amount_paid)}
                       </td>
 
                       {/* Due */}
                       <td className="py-3 px-4 text-right font-mono">
                         {p.balance_due > 0 ? (
-                          <span className="text-amber-400 font-semibold">{formatINR(p.balance_due)}</span>
+                          <span className="text-amber-500 dark:text-amber-400 font-semibold">{formatINR(p.balance_due)}</span>
                         ) : (
-                          <span className="text-slate-500">₹0.00</span>
+                          <span className="text-slate-400">₹0.00</span>
                         )}
                       </td>
 
@@ -217,7 +211,7 @@ export const Finance: React.FC = () => {
                           variant="ghost"
                           size="sm"
                           onClick={() => setSelectedReceipt(p)}
-                          className="text-xs text-slate-400 hover:text-white"
+                          className="text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                         >
                           View Invoice
                         </Button>
@@ -240,11 +234,11 @@ export const Finance: React.FC = () => {
       >
         <form onSubmit={handleCollectPayment} className="space-y-4 text-xs">
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">Select Member *</label>
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Select Member *</label>
             <select
               value={memberId}
               onChange={(e) => setMemberId(e.target.value)}
-              className="w-full bg-[#0D1322] border border-white/10 rounded-md px-3 py-2 text-xs text-slate-100"
+              className="w-full bg-slate-50 dark:bg-[#0D1322] border border-slate-200 dark:border-white/10 rounded-md px-3 py-2 text-xs text-slate-900 dark:text-slate-100"
               required
             >
               <option value="">-- Choose Member --</option>
@@ -258,11 +252,11 @@ export const Finance: React.FC = () => {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Payment Type</label>
+              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Payment Type</label>
               <select
                 value={paymentType}
                 onChange={(e) => setPaymentType(e.target.value as PaymentType)}
-                className="w-full bg-[#0D1322] border border-white/10 rounded-md px-3 py-2 text-xs text-slate-100"
+                className="w-full bg-slate-50 dark:bg-[#0D1322] border border-slate-200 dark:border-white/10 rounded-md px-3 py-2 text-xs text-slate-900 dark:text-slate-100"
               >
                 <option value="membership_fee">Membership Fee</option>
                 <option value="renewal">Plan Renewal</option>
@@ -273,11 +267,11 @@ export const Finance: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Payment Method</label>
+              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Payment Method</label>
               <select
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-                className="w-full bg-[#0D1322] border border-white/10 rounded-md px-3 py-2 text-xs text-slate-100"
+                className="w-full bg-slate-50 dark:bg-[#0D1322] border border-slate-200 dark:border-white/10 rounded-md px-3 py-2 text-xs text-slate-900 dark:text-slate-100"
               >
                 <option value="upi">UPI (GPay / PhonePe / Paytm)</option>
                 <option value="card">Credit / Debit Card</option>
@@ -328,7 +322,7 @@ export const Finance: React.FC = () => {
             onChange={(e) => setNotes(e.target.value)}
           />
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-white/10">
+          <div className="flex justify-end gap-2 pt-3 border-t border-slate-200 dark:border-white/10">
             <Button variant="secondary" size="sm" type="button" onClick={() => setIsCollectModalOpen(false)}>
               Cancel
             </Button>
@@ -342,52 +336,53 @@ export const Finance: React.FC = () => {
       {/* Tax Invoice Printable Drawer */}
       {selectedReceipt && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-lg bg-[#111827] border border-white/10 rounded-2xl p-6 shadow-2xl space-y-6">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+          <div className="w-full max-w-lg bg-white dark:bg-[#111827] border border-slate-200 dark:border-white/10 rounded-2xl p-6 shadow-2xl space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-4">
               <div className="flex items-center gap-2">
-                <Receipt className="w-5 h-5 text-emerald-400" />
-                <h3 className="text-base font-bold text-white">GST Tax Invoice</h3>
+                <Receipt className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">GST Tax Invoice</h3>
               </div>
               <button
+                type="button"
                 onClick={() => setSelectedReceipt(null)}
-                className="p-1.5 rounded-md text-slate-400 hover:text-white"
+                className="p-1.5 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Invoice Printable Sheet */}
-            <div className="bg-[#090D16] border border-white/10 rounded-xl p-6 space-y-4 text-xs font-mono">
-              <div className="text-center border-b border-white/10 pb-4">
-                <h2 className="text-base font-bold text-white">{currentGym.name}</h2>
-                <p className="text-[11px] text-slate-400">{currentGym.address_line1}, {currentGym.city}, {currentGym.state}</p>
-                <p className="text-[11px] text-emerald-400 font-semibold mt-1">GSTIN: {currentGym.gstin || '27AABCO1234F1Z5'}</p>
+            <div className="bg-slate-50 dark:bg-[#090D16] border border-slate-200 dark:border-white/10 rounded-xl p-6 space-y-4 text-xs font-mono">
+              <div className="text-center border-b border-slate-200 dark:border-white/10 pb-4">
+                <h2 className="text-base font-bold text-slate-900 dark:text-white">{currentGym.name}</h2>
+                <p className="text-[11px] text-slate-600 dark:text-slate-400">{currentGym.address_line1}, {currentGym.city}, {currentGym.state}</p>
+                <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold mt-1">GSTIN: {currentGym.gstin || '27AABCO1234F1Z5'}</p>
               </div>
 
-              <div className="flex justify-between border-b border-white/10 pb-3">
+              <div className="flex justify-between border-b border-slate-200 dark:border-white/10 pb-3">
                 <div>
                   <span className="text-slate-500">BILLED TO:</span>
-                  <p className="font-bold text-white text-xs">{selectedReceipt.member?.full_name || 'Member'}</p>
-                  <p className="text-slate-400">{selectedReceipt.member?.phone}</p>
+                  <p className="font-bold text-slate-900 dark:text-white text-xs">{selectedReceipt.member?.full_name || 'Member'}</p>
+                  <p className="text-slate-600 dark:text-slate-400">{selectedReceipt.member?.phone}</p>
                 </div>
                 <div className="text-right">
                   <span className="text-slate-500">INVOICE NUMBER:</span>
-                  <p className="font-bold text-emerald-400">{selectedReceipt.invoice_number}</p>
-                  <p className="text-slate-400">{formatDateTime(selectedReceipt.created_at)}</p>
+                  <p className="font-bold text-emerald-600 dark:text-emerald-400">{selectedReceipt.invoice_number}</p>
+                  <p className="text-slate-500 dark:text-slate-400">{formatDateTime(selectedReceipt.created_at)}</p>
                 </div>
               </div>
 
-              <div className="space-y-2 border-b border-white/10 pb-3">
-                <div className="flex justify-between text-slate-300">
+              <div className="space-y-2 border-b border-slate-200 dark:border-white/10 pb-3">
+                <div className="flex justify-between text-slate-700 dark:text-slate-300">
                   <span>Description:</span>
                   <span className="font-semibold uppercase">{selectedReceipt.payment_type.replace('_', ' ')}</span>
                 </div>
-                <div className="flex justify-between text-slate-300">
+                <div className="flex justify-between text-slate-700 dark:text-slate-300">
                   <span>Payment Mode:</span>
-                  <span className="uppercase text-emerald-400">{selectedReceipt.payment_method}</span>
+                  <span className="uppercase text-emerald-600 dark:text-emerald-400 font-bold">{selectedReceipt.payment_method}</span>
                 </div>
                 {selectedReceipt.transaction_reference && (
-                  <div className="flex justify-between text-slate-400 text-[10px]">
+                  <div className="flex justify-between text-slate-500 dark:text-slate-400 text-[10px]">
                     <span>Reference / UTR:</span>
                     <span>{selectedReceipt.transaction_reference}</span>
                   </div>
@@ -395,19 +390,19 @@ export const Finance: React.FC = () => {
               </div>
 
               <div className="space-y-1.5 pt-1">
-                <div className="flex justify-between text-slate-400">
+                <div className="flex justify-between text-slate-600 dark:text-slate-400">
                   <span>Taxable Value:</span>
                   <span>{formatINR(selectedReceipt.amount_paid - selectedReceipt.tax_amount)}</span>
                 </div>
-                <div className="flex justify-between text-slate-400">
+                <div className="flex justify-between text-slate-600 dark:text-slate-400">
                   <span>CGST (9%):</span>
                   <span>{formatINR(selectedReceipt.tax_amount / 2)}</span>
                 </div>
-                <div className="flex justify-between text-slate-400">
+                <div className="flex justify-between text-slate-600 dark:text-slate-400">
                   <span>SGST (9%):</span>
                   <span>{formatINR(selectedReceipt.tax_amount / 2)}</span>
                 </div>
-                <div className="flex justify-between text-base font-bold text-emerald-400 pt-2 border-t border-white/10">
+                <div className="flex justify-between text-base font-bold text-emerald-600 dark:text-emerald-400 pt-2 border-t border-slate-200 dark:border-white/10">
                   <span>TOTAL PAID:</span>
                   <span>{formatINR(selectedReceipt.amount_paid)}</span>
                 </div>
@@ -429,9 +424,9 @@ export const Finance: React.FC = () => {
                   });
                   window.open(url, '_blank');
                 }}
-                className="gap-1.5 text-emerald-400 hover:text-emerald-300 border-emerald-500/30"
+                className="gap-1.5 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 border-emerald-500/30"
               >
-                <MessageCircle className="w-4 h-4 text-emerald-400" />
+                <MessageCircle className="w-4 h-4 text-emerald-500" />
                 WhatsApp Invoice
               </Button>
               <Button

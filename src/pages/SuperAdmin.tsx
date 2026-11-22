@@ -40,11 +40,11 @@ export const SuperAdmin: React.FC = () => {
       <div className="bg-gradient-to-r from-indigo-950/40 via-[#111827] to-[#111827] border border-indigo-500/30 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <Badge variant="info" className="mb-2">Platform Master Administration</Badge>
-          <h1 className="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
-            <ShieldAlert className="w-5 h-5 text-indigo-400" />
+          <h1 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+            <ShieldAlert className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
             GymOS SaaS Super Admin Portal
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
             Global tenant governance, subscription recurring revenue (MRR), and platform audit logs
           </p>
         </div>
