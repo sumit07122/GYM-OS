@@ -18,7 +18,6 @@ import {
   Building2,
   ChevronDown,
 } from 'lucide-react';
-import { GymRole } from '@/types';
 
 export const Sidebar: React.FC = () => {
   const { currentGym, allGyms, setGym, branding, activeRole, setActiveRole } = useTenant();
@@ -84,20 +83,20 @@ export const Sidebar: React.FC = () => {
   const navGroups = activeRole === 'member' ? memberNavGroups : ownerNavGroups;
 
   return (
-    <aside className="w-64 bg-[#0B0F19] border-r border-white/10 flex flex-col h-screen select-none shrink-0">
+    <aside className="w-64 bg-white dark:bg-[#0B0F19] border-r border-slate-200 dark:border-white/10 flex flex-col h-screen select-none shrink-0 transition-colors duration-150">
       {/* Brand & Tenant Header */}
-      <div className="p-4 border-b border-white/10">
+      <div className="p-4 border-b border-slate-200 dark:border-white/10">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-glow overflow-hidden shrink-0">
             {branding.logo_url ? (
               <img src={branding.logo_url} alt={currentGym.name} className="w-full h-full object-cover" />
             ) : (
-              <Dumbbell className="w-5 h-5 text-[#090D16]" />
+              <Dumbbell className="w-5 h-5 text-white" />
             )}
           </div>
           <div className="min-w-0 flex-1">
-            <h1 className="text-sm font-bold text-slate-100 truncate tracking-tight">{currentGym.name}</h1>
-            <p className="text-[11px] text-emerald-400 font-mono truncate">slug: {currentGym.slug}</p>
+            <h1 className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate tracking-tight">{currentGym.name}</h1>
+            <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono truncate">slug: {currentGym.slug}</p>
           </div>
         </div>
 
@@ -110,7 +109,7 @@ export const Sidebar: React.FC = () => {
                 const found = allGyms.find(g => g.id === e.target.value);
                 if (found) setGym(found);
               }}
-              className="w-full bg-[#111827] border border-white/10 rounded-md px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-emerald-500"
+              className="w-full bg-slate-50 dark:bg-[#111827] border border-slate-200 dark:border-white/10 rounded-md px-2.5 py-1.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:border-emerald-500"
             >
               {allGyms.map(g => (
                 <option key={g.id} value={g.id}>{g.name}</option>
@@ -120,8 +119,8 @@ export const Sidebar: React.FC = () => {
         )}
 
         {/* Streamlined Operational Role Switcher: Gym Owner vs Member */}
-        <div className="mt-3 pt-2.5 border-t border-white/5">
-          <div className="grid grid-cols-2 gap-1 bg-[#070b12] p-1 rounded-xl border border-white/10">
+        <div className="mt-3 pt-2.5 border-t border-slate-200 dark:border-white/5">
+          <div className="grid grid-cols-2 gap-1 bg-slate-100 dark:bg-[#070b12] p-1 rounded-xl border border-slate-200 dark:border-white/10">
             <button
               type="button"
               onClick={() => {
@@ -130,8 +129,8 @@ export const Sidebar: React.FC = () => {
               }}
               className={`py-1.5 px-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
                 activeRole === 'gym_owner'
-                  ? 'bg-emerald-500 text-[#090D16] shadow-glow font-bold'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-emerald-500 text-white dark:text-[#090D16] shadow-sm font-bold'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <ShieldAlert className="w-3.5 h-3.5" />
@@ -145,8 +144,8 @@ export const Sidebar: React.FC = () => {
               }}
               className={`py-1.5 px-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
                 activeRole === 'member'
-                  ? 'bg-emerald-500 text-[#090D16] shadow-glow font-bold'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-emerald-500 text-white dark:text-[#090D16] shadow-sm font-bold'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <Sparkles className="w-3.5 h-3.5" />
@@ -160,7 +159,7 @@ export const Sidebar: React.FC = () => {
       <nav className="flex-1 overflow-y-auto p-3 space-y-5">
         {navGroups.map((group) => (
           <div key={group.label}>
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-2.5 mb-1.5">
+            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest px-2.5 mb-1.5">
               {group.label}
             </p>
             <div className="space-y-0.5">
@@ -172,8 +171,8 @@ export const Sidebar: React.FC = () => {
                     cn(
                       'flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-medium transition-colors',
                       isActive
-                        ? 'bg-emerald-500/15 text-emerald-400 font-semibold border border-emerald-500/30 shadow-sm'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+                        ? 'bg-emerald-500/10 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-semibold border border-emerald-500/20 dark:border-emerald-500/30 shadow-sm'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5'
                     )
                   }
                 >
@@ -187,10 +186,10 @@ export const Sidebar: React.FC = () => {
       </nav>
 
       {/* GymOS SaaS Footer */}
-      <div className="p-3 border-t border-white/10 bg-[#090D16]">
+      <div className="p-3 border-t border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#090D16]">
         <div className="flex items-center justify-between text-[11px] text-slate-500">
           <span>GymOS v1.0.0</span>
-          <span className="text-emerald-400 font-mono font-medium">Enterprise ERP</span>
+          <span className="text-emerald-600 dark:text-emerald-400 font-mono font-medium">Enterprise ERP</span>
         </div>
       </div>
     </aside>

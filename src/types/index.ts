@@ -6,15 +6,15 @@ export type MemberStatus = 'active' | 'expiring' | 'expired' | 'frozen' | 'inact
 
 export type PaymentMethod = 'cash' | 'upi' | 'card' | 'bank_transfer' | 'cheque' | 'other';
 
-export type PaymentType = 
-  | 'membership_fee' 
-  | 'registration_fee' 
-  | 'personal_training' 
-  | 'merchandise' 
-  | 'supplement' 
-  | 'locker_fee' 
-  | 'renewal' 
-  | 'penalty_fee' 
+export type PaymentType =
+  | 'membership_fee'
+  | 'registration_fee'
+  | 'personal_training'
+  | 'merchandise'
+  | 'supplement'
+  | 'locker_fee'
+  | 'renewal'
+  | 'penalty_fee'
   | 'refund';
 
 export type AttendanceMethod = 'gps_geofence' | 'qr_scan' | 'reception_manual' | 'biometric' | 'mobile_app';
