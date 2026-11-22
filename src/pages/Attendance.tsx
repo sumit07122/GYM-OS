@@ -227,10 +227,16 @@ export const Attendance: React.FC = () => {
                             {rec.member?.member_code} • {rec.member?.phone}
                           </p>
                           <Badge
-                            variant={rec.method === 'qr_scan' ? 'active' : 'info'}
-                            className="text-[9px] mt-1 py-0 px-1.5"
+                            variant={rec.method === 'qr_scan' || rec.method === 'gps_geofence' ? 'active' : 'info'}
+                            className={`text-[9px] mt-1 py-0 px-1.5 ${
+                              rec.method === 'gps_geofence' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : ''
+                            }`}
                           >
-                            {rec.method === 'qr_scan' ? 'QR Scanner Pass' : 'Receptionist Manual'}
+                            {rec.method === 'qr_scan'
+                              ? 'QR Scanner Pass'
+                              : rec.method === 'gps_geofence'
+                              ? 'GPS Auto-Geofence'
+                              : 'Receptionist Manual'}
                           </Badge>
                         </div>
                       </div>

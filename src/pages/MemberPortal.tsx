@@ -4,6 +4,7 @@ import { gymStore } from '@/lib/supabase/store';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { GpsAutoAttendanceCard } from '@/components/attendance/GpsAutoAttendanceCard';
 import { formatDate, getExpiryStatus } from '@/lib/formatting/dates';
 import { formatINR } from '@/lib/formatting/currency';
 import {
@@ -56,6 +57,9 @@ export const MemberPortal: React.FC = () => {
           Print Pass
         </Button>
       </div>
+
+      {/* GPS Geofenced Auto-Attendance Punch Card */}
+      <GpsAutoAttendanceCard gym={currentGym} member={currentMember} />
 
       {/* Digital Gym ID Card Widget */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
