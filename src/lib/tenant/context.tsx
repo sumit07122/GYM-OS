@@ -26,8 +26,8 @@ export const TenantProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const currentUser: UserProfile = {
     id: 'user-active-session',
-    email: activeRole === 'gym_owner' ? 'owner@olympiafitness.in' : `${activeRole}@olympiafitness.in`,
-    full_name: activeRole === 'gym_owner' ? 'Vikramaditya Singhania' : activeRole === 'trainer' ? 'Kabir Sharma' : activeRole === 'receptionist' ? 'Pooja Verma' : 'Aarav Mehta',
+    email: activeRole === 'member' ? 'aarav.mehta@gmail.com' : 'owner@olympiafitness.in',
+    full_name: activeRole === 'member' ? 'Aarav Mehta' : 'Vikramaditya Singhania',
     is_active: true,
     created_at: new Date().toISOString(),
   };

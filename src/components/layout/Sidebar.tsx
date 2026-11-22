@@ -24,7 +24,7 @@ export const Sidebar: React.FC = () => {
   const { currentGym, allGyms, setGym, branding, activeRole, setActiveRole } = useTenant();
   const slug = currentGym.slug;
 
-  const navGroups = [
+  const ownerNavGroups = [
     {
       label: 'OVERVIEW',
       items: [
@@ -35,7 +35,7 @@ export const Sidebar: React.FC = () => {
       label: 'OPERATIONS',
       items: [
         { label: 'Members', icon: Users, path: `/gym/${slug}/members` },
-        { label: 'Attendance & QR', icon: QrCode, path: `/gym/${slug}/attendance` },
+        { label: 'Attendance & GPS', icon: QrCode, path: `/gym/${slug}/attendance` },
         { label: 'Membership Plans', icon: CreditCard, path: `/gym/${slug}/plans` },
         { label: 'Leads & Enquiries', icon: UserCheck, path: `/gym/${slug}/leads` },
       ],
@@ -43,33 +43,44 @@ export const Sidebar: React.FC = () => {
     {
       label: 'FINANCE & POS',
       items: [
-        { label: 'Payments & POS', icon: Receipt, path: `/gym/${slug}/finance` },
-        { label: 'Expenses', icon: TrendingUp, path: `/gym/${slug}/expenses` },
+        { label: 'Payments & Receipts', icon: Receipt, path: `/gym/${slug}/finance` },
+        { label: 'Expenses Ledger', icon: TrendingUp, path: `/gym/${slug}/expenses` },
       ],
     },
     {
-      label: 'FITNESS',
+      label: 'FITNESS & TRAINING',
       items: [
         { label: 'Trainers & Staff', icon: Users, path: `/gym/${slug}/staff` },
-        { label: 'Workout Plans', icon: Dumbbell, path: `/gym/${slug}/workouts` },
-        { label: 'Diet Plans', icon: Utensils, path: `/gym/${slug}/diets` },
-      ],
-    },
-    {
-      label: 'PORTALS',
-      items: [
-        { label: 'Trainer Portal', icon: Dumbbell, path: `/gym/${slug}/trainer` },
-        { label: 'Member Pass & Portal', icon: Sparkles, path: `/gym/${slug}/member` },
+        { label: 'Workout Library', icon: Dumbbell, path: `/gym/${slug}/workouts` },
+        { label: 'Diet & Nutrition', icon: Utensils, path: `/gym/${slug}/diets` },
       ],
     },
     {
       label: 'CONFIGURATION',
       items: [
-        { label: 'Settings & Branding', icon: Settings, path: `/gym/${slug}/settings` },
+        { label: 'Settings & Geofence', icon: Settings, path: `/gym/${slug}/settings` },
         { label: 'Super Admin Portal', icon: ShieldAlert, path: `/super-admin` },
       ],
     },
   ];
+
+  const memberNavGroups = [
+    {
+      label: 'MEMBER PASS',
+      items: [
+        { label: 'Digital Pass & GPS', icon: Sparkles, path: `/gym/${slug}/member` },
+      ],
+    },
+    {
+      label: 'FITNESS & NUTRITION',
+      items: [
+        { label: 'My Workout Routine', icon: Dumbbell, path: `/gym/${slug}/workouts` },
+        { label: 'My Nutrition Split', icon: Utensils, path: `/gym/${slug}/diets` },
+      ],
+    },
+  ];
+
+  const navGroups = activeRole === 'member' ? memberNavGroups : ownerNavGroups;
 
   return (
     <aside className="w-64 bg-[#0B0F19] border-r border-white/10 flex flex-col h-screen select-none shrink-0">
@@ -107,21 +118,34 @@ export const Sidebar: React.FC = () => {
           </div>
         )}
 
-        {/* Active Role Switcher for Testing & Persona Inspection */}
-        <div className="mt-2.5 pt-2 border-t border-white/5 flex items-center justify-between">
-          <span className="text-[10px] uppercase font-semibold text-slate-500">Active Role:</span>
-          <select
-            value={activeRole}
-            onChange={(e) => setActiveRole(e.target.value as GymRole)}
-            className="bg-[#151D2E] text-emerald-400 text-[11px] font-medium border border-emerald-500/30 rounded px-1.5 py-0.5 focus:outline-none"
-          >
-            <option value="gym_owner">Gym Owner</option>
-            <option value="gym_manager">Gym Manager</option>
-            <option value="receptionist">Receptionist</option>
-            <option value="trainer">Trainer</option>
-            <option value="member">Member</option>
-            <option value="platform_super_admin">Super Admin</option>
-          </select>
+        {/* Streamlined Operational Role Switcher: Gym Owner vs Member */}
+        <div className="mt-3 pt-2.5 border-t border-white/5">
+          <div className="grid grid-cols-2 gap-1 bg-[#070b12] p-1 rounded-xl border border-white/10">
+            <button
+              type="button"
+              onClick={() => setActiveRole('gym_owner')}
+              className={`py-1.5 px-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
+                activeRole === 'gym_owner'
+                  ? 'bg-emerald-500 text-[#090D16] shadow-glow font-bold'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <ShieldAlert className="w-3.5 h-3.5" />
+              Owner ERP
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveRole('member')}
+              className={`py-1.5 px-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
+                activeRole === 'member'
+                  ? 'bg-emerald-500 text-[#090D16] shadow-glow font-bold'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              Member
+            </button>
+          </div>
         </div>
       </div>
 
