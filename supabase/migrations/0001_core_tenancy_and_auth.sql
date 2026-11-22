@@ -75,6 +75,11 @@ CREATE TABLE IF NOT EXISTS public.gym_settings (
   attendance_qr_refresh_seconds INT NOT NULL DEFAULT 60,
   allow_member_portal_renewals BOOLEAN NOT NULL DEFAULT true,
   max_freeze_days_per_year INT NOT NULL DEFAULT 30,
+  -- Geofence Configuration
+  latitude NUMERIC(9,6) NOT NULL DEFAULT 19.059600,
+  longitude NUMERIC(9,6) NOT NULL DEFAULT 72.829500,
+  geofence_radius_meters INT NOT NULL DEFAULT 100,
+  enable_gps_attendance BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

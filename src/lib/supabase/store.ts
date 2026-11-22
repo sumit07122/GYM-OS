@@ -5,9 +5,10 @@ import {
   Gym, GymSettings, GymBranding, GymStaff, Trainer, Member, 
   MembershipPlan, MemberSubscription, AttendanceRecord, Payment, 
   Expense, WorkoutPlan, DietPlan, MemberMeasurement, Lead, 
-  Notification, GymSubscription, AuditLog, GymRole 
+  Notification, GymSubscription, AuditLog 
 } from '@/types';
 import { calculateGST } from '@/lib/formatting/currency';
+import { calculateDistanceMeters, isWithinGeofence, formatDistance } from '@/lib/geo/distance';
 
 const STORAGE_KEY = 'gymos_enterprise_store_v1';
 
@@ -61,6 +62,10 @@ const INITIAL_SETTINGS: GymSettings = {
   attendance_qr_refresh_seconds: 60,
   allow_member_portal_renewals: true,
   max_freeze_days_per_year: 30,
+  latitude: 19.0596, // Bandra West, Mumbai
+  longitude: 72.8295,
+  geofence_radius_meters: 100,
+  enable_gps_attendance: true,
 };
 
 const INITIAL_BRANDING: GymBranding = {
@@ -609,6 +614,10 @@ class GymStore {
       attendance_qr_refresh_seconds: 60,
       allow_member_portal_renewals: true,
       max_freeze_days_per_year: 30,
+      latitude: 19.0596,
+      longitude: 72.8295,
+      geofence_radius_meters: 100,
+      enable_gps_attendance: true,
     };
 
     const newBranding: GymBranding = {
@@ -769,7 +778,7 @@ class GymStore {
       .sort((a, b) => new Date(b.check_in_time).getTime() - new Date(a.check_in_time).getTime());
   }
 
-  checkInMember(gymId: string, memberId: string, method: 'qr_scan' | 'reception_manual' = 'reception_manual', staffName = 'Front Desk'): { success: boolean; message: string; record?: AttendanceRecord } {
+  checkInMember(gymId: string, memberId: string, method: 'gps_geofence' | 'qr_scan' | 'reception_manual' = 'reception_manual', staffName = 'Front Desk'): { success: boolean; message: string; record?: AttendanceRecord } {
     const member = this.state.members.find(m => m.id === memberId && m.gym_id === gymId);
     if (!member) {
       return { success: false, message: 'Member not found or does not belong to this facility.' };
@@ -803,6 +812,44 @@ class GymStore {
     this.state.attendance.unshift(newRecord);
     this.saveState(this.state);
     return { success: true, message: `Check-in recorded successfully for ${member.full_name}`, record: newRecord };
+  }
+
+  checkInMemberViaGps(
+    gymId: string,
+    memberId: string,
+    userLatitude: number,
+    userLongitude: number
+  ): { success: boolean; message: string; distanceMeters?: number; record?: AttendanceRecord } {
+    const settings = this.getSettings(gymId);
+    const member = this.state.members.find(m => m.id === memberId && m.gym_id === gymId);
+    if (!member) {
+      return { success: false, message: 'Member not found or unauthorized.' };
+    }
+
+    if (!settings.enable_gps_attendance) {
+      return { success: false, message: 'GPS attendance is currently disabled by gym administration.' };
+    }
+
+    const distance = calculateDistanceMeters(
+      userLatitude,
+      userLongitude,
+      settings.latitude,
+      settings.longitude
+    );
+
+    if (!isWithinGeofence(distance, settings.geofence_radius_meters)) {
+      return {
+        success: false,
+        distanceMeters: distance,
+        message: `Outside gym perimeter (${formatDistance(distance)} away). Auto-checkin requires being within ${settings.geofence_radius_meters}m of the facility.`,
+      };
+    }
+
+    const checkInRes = this.checkInMember(gymId, memberId, 'gps_geofence', 'GPS Auto-Geofence');
+    return {
+      ...checkInRes,
+      distanceMeters: distance,
+    };
   }
 
   // --- Payments & Financial ERP ---

@@ -10,6 +10,7 @@ CREATE TYPE member_status AS ENUM (
 );
 
 CREATE TYPE attendance_method AS ENUM (
+  'gps_geofence',
   'qr_scan',
   'reception_manual',
   'biometric',
