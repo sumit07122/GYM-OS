@@ -4,7 +4,8 @@ import { formatINR } from '@/lib/formatting/currency';
 /**
  * Normalizes Indian mobile numbers into international wa.me format (e.g. 919820198201)
  */
-export function formatWhatsAppPhone(phone: string): string {
+export function formatWhatsAppPhone(phone: string = ''): string {
+  if (!phone) return '';
   const digits = phone.replace(/\D/g, '');
   if (digits.length === 10) {
     return `91${digits}`;

@@ -72,4 +72,43 @@ describe('Attendance Rules & Geofence Check-in', () => {
     expect(res.message).toContain('Outside gym perimeter');
     expect(res.distanceMeters).toBeGreaterThan(100);
   });
+
+  it('enforces cross-method lockout: GPS check-in locks out subsequent QR scan within 60 minutes', () => {
+    const crossMember = gymStore.createMember(gymId, {
+      full_name: 'Cross Lockout Member',
+      phone: '+91 96666 44444',
+      gender: 'Male',
+      joining_date: '2026-11-22',
+    });
+
+    const settings = gymStore.getSettings(gymId);
+    // 1st Check-in via GPS
+    const gpsRes = gymStore.checkInMemberViaGps(gymId, crossMember.id, settings.latitude, settings.longitude);
+    expect(gpsRes.success).toBe(true);
+
+    // 2nd Immediate Check-in via QR scan
+    const qrRes = gymStore.checkInMember(gymId, crossMember.id, 'qr_scan', 'Kiosk Camera');
+    expect(qrRes.success).toBe(false);
+    expect(qrRes.message).toContain('Duplicate prevented');
+  });
+
+  it('rejects GPS check-in when enable_gps_attendance is toggled off in settings', () => {
+    const disabledTestMember = gymStore.createMember(gymId, {
+      full_name: 'Disabled GPS Member',
+      phone: '+91 95555 33333',
+      gender: 'Female',
+      joining_date: '2026-11-22',
+    });
+
+    const settings = gymStore.getSettings(gymId);
+    // Disable GPS attendance in settings
+    gymStore.updateSettings(gymId, { enable_gps_attendance: false });
+
+    const res = gymStore.checkInMemberViaGps(gymId, disabledTestMember.id, settings.latitude, settings.longitude);
+    expect(res.success).toBe(false);
+    expect(res.message).toContain('disabled by gym administration');
+
+    // Restore setting
+    gymStore.updateSettings(gymId, { enable_gps_attendance: true });
+  });
 });

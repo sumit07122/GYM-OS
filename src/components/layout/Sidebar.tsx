@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useTenant } from '@/lib/tenant/context';
 import { cn } from '@/lib/utils';
 import {
@@ -22,6 +22,7 @@ import { GymRole } from '@/types';
 
 export const Sidebar: React.FC = () => {
   const { currentGym, allGyms, setGym, branding, activeRole, setActiveRole } = useTenant();
+  const navigate = useNavigate();
   const slug = currentGym.slug;
 
   const ownerNavGroups = [
@@ -123,7 +124,10 @@ export const Sidebar: React.FC = () => {
           <div className="grid grid-cols-2 gap-1 bg-[#070b12] p-1 rounded-xl border border-white/10">
             <button
               type="button"
-              onClick={() => setActiveRole('gym_owner')}
+              onClick={() => {
+                setActiveRole('gym_owner');
+                navigate(`/gym/${slug}/dashboard`);
+              }}
               className={`py-1.5 px-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
                 activeRole === 'gym_owner'
                   ? 'bg-emerald-500 text-[#090D16] shadow-glow font-bold'
@@ -135,7 +139,10 @@ export const Sidebar: React.FC = () => {
             </button>
             <button
               type="button"
-              onClick={() => setActiveRole('member')}
+              onClick={() => {
+                setActiveRole('member');
+                navigate(`/gym/${slug}/member`);
+              }}
               className={`py-1.5 px-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
                 activeRole === 'member'
                   ? 'bg-emerald-500 text-[#090D16] shadow-glow font-bold'

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTenant } from '@/lib/tenant/context';
 import { format } from 'date-fns';
 import { Bell, Search, ShieldAlert, Sparkles, CheckCircle2 } from 'lucide-react';
@@ -6,6 +7,7 @@ import { Badge } from '@/components/ui/Badge';
 
 export const Header: React.FC = () => {
   const { currentGym, activeRole, setActiveRole, currentUser } = useTenant();
+  const navigate = useNavigate();
   const todayFormatted = format(new Date(), 'EEEE, dd MMM yyyy');
 
   return (
@@ -37,7 +39,10 @@ export const Header: React.FC = () => {
         <div className="hidden lg:flex items-center bg-[#111827] p-1 rounded-lg border border-white/10 text-xs">
           <button
             type="button"
-            onClick={() => setActiveRole('gym_owner')}
+            onClick={() => {
+              setActiveRole('gym_owner');
+              navigate(`/gym/${currentGym.slug}/dashboard`);
+            }}
             className={`px-2.5 py-1 rounded font-medium transition-colors flex items-center gap-1.5 ${
               activeRole === 'gym_owner'
                 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30'
@@ -49,7 +54,10 @@ export const Header: React.FC = () => {
           </button>
           <button
             type="button"
-            onClick={() => setActiveRole('member')}
+            onClick={() => {
+              setActiveRole('member');
+              navigate(`/gym/${currentGym.slug}/member`);
+            }}
             className={`px-2.5 py-1 rounded font-medium transition-colors flex items-center gap-1.5 ${
               activeRole === 'member'
                 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30'

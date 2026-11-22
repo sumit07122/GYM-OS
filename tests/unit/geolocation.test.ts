@@ -59,4 +59,18 @@ describe('Geolocation & Haversine Distance Engine', () => {
     expect(formatDistance(45)).toBe('45 m');
     expect(formatDistance(1450)).toBe('1.5 km');
   });
+
+  it('handles antipodal coordinates without returning NaN', () => {
+    const dist = calculateDistanceMeters(-87.5, 0, 87.5, 180);
+    expect(Number.isNaN(dist)).toBe(false);
+    expect(dist).toBeGreaterThan(19000000);
+  });
+
+  it('handles negative coordinates across southern and western hemispheres', () => {
+    // Sydney (-33.8688, 151.2093) to Santiago (-33.4489, -70.6693)
+    const dist = calculateDistanceMeters(-33.8688, 151.2093, -33.4489, -70.6693);
+    expect(Number.isNaN(dist)).toBe(false);
+    expect(dist).toBeGreaterThan(11000000);
+    expect(dist).toBeLessThan(12000000);
+  });
 });

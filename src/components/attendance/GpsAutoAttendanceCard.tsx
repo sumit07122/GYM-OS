@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
@@ -40,6 +40,13 @@ export const GpsAutoAttendanceCard: React.FC<GpsAutoAttendanceCardProps> = ({
   });
   const [gpsLoading, setGpsLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState<{ success: boolean; text: string } | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
   // Compute live distance
   const distanceMeters = calculateDistanceMeters(coords.lat, coords.lon, gymLat, gymLon);
@@ -87,7 +94,8 @@ export const GpsAutoAttendanceCard: React.FC<GpsAutoAttendanceCardProps> = ({
     if (res.success && onAttendanceSuccess) {
       onAttendanceSuccess();
     }
-    setTimeout(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
       setStatusMessage(null);
     }, 5000);
   };

@@ -46,7 +46,9 @@ export const Settings: React.FC = () => {
   const [latitude, setLatitude] = useState(String(settings.latitude ?? 19.0596));
   const [longitude, setLongitude] = useState(String(settings.longitude ?? 72.8295));
   const [geofenceRadius, setGeofenceRadius] = useState(String(settings.geofence_radius_meters ?? 100));
-  const [geofenceEnabled, setGeofenceEnabled] = useState(settings.geofence_attendance_enabled ?? true);
+  const [geofenceEnabled, setGeofenceEnabled] = useState(
+    settings.enable_gps_attendance ?? settings.geofence_attendance_enabled ?? true
+  );
 
   // Integrations Form
   const [razorpayKey, setRazorpayKey] = useState(settings.razorpay_key_id || 'rzp_test_GYMOS1029384756');
@@ -86,6 +88,7 @@ export const Settings: React.FC = () => {
       latitude: parseFloat(latitude) || 19.0596,
       longitude: parseFloat(longitude) || 72.8295,
       geofence_radius_meters: parseInt(geofenceRadius, 10) || 100,
+      enable_gps_attendance: geofenceEnabled,
       geofence_attendance_enabled: geofenceEnabled,
       razorpay_key_id: razorpayKey,
       whatsapp_business_number: whatsappPhone,

@@ -120,5 +120,7 @@ CREATE POLICY "attendance_select" ON public.attendance_records FOR SELECT USING 
   public.is_gym_staff(gym_id) OR EXISTS (SELECT 1 FROM public.members WHERE id = member_id AND user_id = auth.uid()) OR public.is_platform_super_admin()
 );
 CREATE POLICY "attendance_insert" ON public.attendance_records FOR INSERT WITH CHECK (
-  public.is_gym_staff(gym_id) OR public.is_platform_super_admin()
+  public.is_gym_staff(gym_id) 
+  OR public.is_platform_super_admin()
+  OR EXISTS (SELECT 1 FROM public.members WHERE id = member_id AND user_id = auth.uid())
 );
