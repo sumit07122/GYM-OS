@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useTenant } from '@/lib/tenant/context';
 import { cn } from '@/lib/utils';
 import {
@@ -15,13 +15,10 @@ import {
   Settings,
   ShieldAlert,
   Sparkles,
-  Building2,
-  ChevronDown,
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
-  const { currentGym, allGyms, setGym, branding, activeRole, setActiveRole } = useTenant();
-  const navigate = useNavigate();
+  const { currentGym, allGyms, setGym, branding, activeRole } = useTenant();
   const slug = currentGym.slug;
 
   const ownerNavGroups = [
@@ -118,39 +115,18 @@ export const Sidebar: React.FC = () => {
           </div>
         )}
 
-        {/* Streamlined Operational Role Switcher: Gym Owner vs Member */}
+        {/* Authenticated Mode Indicator */}
         <div className="mt-3 pt-2.5 border-t border-slate-200 dark:border-white/5">
-          <div className="grid grid-cols-2 gap-1 bg-slate-100 dark:bg-[#070b12] p-1 rounded-xl border border-slate-200 dark:border-white/10">
-            <button
-              type="button"
-              onClick={() => {
-                setActiveRole('gym_owner');
-                navigate(`/gym/${slug}/dashboard`);
-              }}
-              className={`py-1.5 px-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
-                activeRole === 'gym_owner'
-                  ? 'bg-emerald-500 text-white dark:text-[#090D16] shadow-sm font-bold'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <ShieldAlert className="w-3.5 h-3.5" />
-              Owner ERP
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setActiveRole('member');
-                navigate(`/gym/${slug}/member`);
-              }}
-              className={`py-1.5 px-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
-                activeRole === 'member'
-                  ? 'bg-emerald-500 text-white dark:text-[#090D16] shadow-sm font-bold'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              Member
-            </button>
+          <div className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-[#111827] border border-slate-200 dark:border-white/10">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[11px] font-semibold text-slate-800 dark:text-slate-200">
+                {activeRole === 'member' ? 'Member Portal' : 'Owner ERP Suite'}
+              </span>
+            </div>
+            <span className="text-[10px] font-mono uppercase text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">
+              {activeRole === 'member' ? 'Pass' : 'Admin'}
+            </span>
           </div>
         </div>
       </div>

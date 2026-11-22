@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { calculateDistanceMeters, formatDistance, isWithinGeofence } from '@/lib/geo/distance';
 import { gymStore } from '@/lib/supabase/store';
+import { gymosRepository } from '@/lib/supabase/repository';
 import type { Gym, Member } from '@/types';
 import {
   MapPin,
@@ -88,8 +89,8 @@ export const GpsAutoAttendanceCard: React.FC<GpsAutoAttendanceCardProps> = ({
     }
   };
 
-  const handlePunchAttendance = () => {
-    const res = gymStore.checkInMemberViaGps(gym.id, member.id, coords.lat, coords.lon);
+  const handlePunchAttendance = async () => {
+    const res = await gymosRepository.punchAttendanceGps(gym.id, member.id, coords.lat, coords.lon);
     setStatusMessage({ success: res.success, text: res.message });
     if (res.success && onAttendanceSuccess) {
       onAttendanceSuccess();

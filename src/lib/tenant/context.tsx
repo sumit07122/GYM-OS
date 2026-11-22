@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Gym, GymRole, GymSettings, GymBranding, GymStaff, UserProfile } from '@/types';
+import { Gym, GymRole, GymSettings, GymBranding, UserProfile } from '@/types';
 import { gymStore } from '@/lib/supabase/store';
+import { gymosRepository } from '@/lib/supabase/repository';
+import { useAuth } from '@/lib/auth/context';
 
 interface TenantContextType {
   currentGym: Gym;
@@ -11,20 +13,50 @@ interface TenantContextType {
   currentUser: UserProfile;
   setGym: (gym: Gym) => void;
   setActiveRole: (role: GymRole) => void;
-  refreshTenant: () => void;
+  refreshTenant: () => Promise<void>;
 }
 
 const TenantContext = createContext<TenantContextType | undefined>(undefined);
 
 export const TenantProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Gracefully handle useAuth if TenantProvider is wrapped by AuthProvider
+  let authContext: ReturnType<typeof useAuth> | null = null;
+  try {
+    authContext = useAuth();
+  } catch {
+    // Auth context not present in isolated unit test environments
+  }
+
   const allGyms = gymStore.getAllGyms();
-  const [currentGym, setCurrentGym] = useState<Gym>(allGyms[0]);
-  const [activeRole, setActiveRole] = useState<GymRole>('gym_owner');
+  const [currentGym, setCurrentGym] = useState<Gym>(() => {
+    if (authContext?.session?.gymSlug) {
+      const found = gymStore.getGymBySlug(authContext.session.gymSlug);
+      if (found) return found;
+    }
+    return allGyms[0];
+  });
+
+  const [activeRole, setActiveRole] = useState<GymRole>(() => {
+    return authContext?.session?.role || 'gym_owner';
+  });
+
+  // Sync role and gym whenever auth session changes
+  useEffect(() => {
+    if (authContext?.session) {
+      if (authContext.session.role && authContext.session.role !== activeRole) {
+        setActiveRole(authContext.session.role);
+      }
+      if (authContext.session.gymSlug && authContext.session.gymSlug !== currentGym.slug) {
+        const found = gymStore.getGymBySlug(authContext.session.gymSlug);
+        if (found) setCurrentGym(found);
+      }
+    }
+  }, [authContext?.session]);
 
   const settings = gymStore.getSettings(currentGym.id);
   const branding = gymStore.getBranding(currentGym.id);
 
-  const currentUser: UserProfile = {
+  const currentUser: UserProfile = authContext?.session?.user || {
     id: 'user-active-session',
     email: activeRole === 'member' ? 'aarav.mehta@gmail.com' : 'owner@olympiafitness.in',
     full_name: activeRole === 'member' ? 'Aarav Mehta' : 'Vikramaditya Singhania',
@@ -42,7 +74,16 @@ export const TenantProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setCurrentGym(gym);
   };
 
-  const refreshTenant = () => {
+  const refreshTenant = async () => {
+    try {
+      const liveGym = await gymosRepository.getGym(currentGym.id);
+      if (liveGym) {
+        setCurrentGym({ ...liveGym });
+        return;
+      }
+    } catch {
+      // Fallback
+    }
     const updated = gymStore.getGym(currentGym.id);
     if (updated) setCurrentGym({ ...updated });
   };
