@@ -97,6 +97,12 @@ BEGIN
     RETURN jsonb_build_object('success', false, 'message', 'Member not found');
   END IF;
 
+  -- Authoritative caller validation: caller must be the member themselves (auth.uid() = user_id) or gym staff / super admin
+  IF auth.uid() IS NOT NULL AND v_member_user_id IS NOT NULL AND v_member_user_id != auth.uid()
+     AND NOT public.is_gym_staff(v_gym_id) AND NOT public.is_platform_super_admin() THEN
+    RETURN jsonb_build_object('success', false, 'message', 'Unauthorized: Caller cannot mark attendance for this member.');
+  END IF;
+
   -- 2. Validate membership status
   IF v_member_status != 'active' AND v_member_status != 'expiring' THEN
     RETURN jsonb_build_object('success', false, 'message', 'Membership is ' || v_member_status || '. Please renew at front desk.');

@@ -10,7 +10,7 @@ import type { GymRole } from '@/types';
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
-  const { signIn, isLoading } = useAuth();
+  const { signIn, session, isLoading } = useAuth();
 
   const [role, setRole] = useState<GymRole>('gym_owner');
   const [email, setEmail] = useState('owner@olympiafitness.in');
@@ -22,10 +22,12 @@ export const Login: React.FC = () => {
     setErrorMessage('');
     const res = await signIn(email, password, role);
     if (res.success) {
-      if (role === 'member') {
-        navigate('/gym/olympia-fitness/member');
+      const targetSlug = res.gymSlug || session?.gymSlug || 'olympia-fitness';
+      const targetRole = res.role || role;
+      if (targetRole === 'member') {
+        navigate(`/gym/${targetSlug}/member`);
       } else {
-        navigate('/gym/olympia-fitness/dashboard');
+        navigate(`/gym/${targetSlug}/dashboard`);
       }
     } else {
       setErrorMessage(res.error || 'Invalid credentials.');

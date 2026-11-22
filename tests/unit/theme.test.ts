@@ -1,4 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
+import * as fs from 'fs';
+import * as path from 'path';
 import { getStoredTheme, resolveTheme, THEME_STORAGE_KEY } from '../../src/lib/theme/context';
 
 // Ensure localStorage polyfill for Node.js test runner
@@ -42,5 +44,21 @@ describe('Theme Engine & System Adaptation', () => {
   it('resolves system mode based on system prefers-color-scheme media query', () => {
     expect(resolveTheme('system', true)).toBe('dark');
     expect(resolveTheme('system', false)).toBe('light');
+  });
+
+  it('verifies Dialog, Button, and MetricCard support dual-theme contrast classes', () => {
+    const dialogPath = path.resolve(__dirname, '../../src/components/ui/Dialog.tsx');
+    const dialogContent = fs.readFileSync(dialogPath, 'utf8');
+    expect(dialogContent).toContain('dark:bg-[#111827]');
+    expect(dialogContent).toContain('bg-white');
+
+    const buttonPath = path.resolve(__dirname, '../../src/components/ui/Button.tsx');
+    const buttonContent = fs.readFileSync(buttonPath, 'utf8');
+    expect(buttonContent).toContain('dark:text-slate-300');
+
+    const metricCardPath = path.resolve(__dirname, '../../src/components/shared/MetricCard.tsx');
+    const metricCardContent = fs.readFileSync(metricCardPath, 'utf8');
+    expect(metricCardContent).toContain('dark:bg-[#111827]');
+    expect(metricCardContent).toContain('bg-white');
   });
 });

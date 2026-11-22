@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTenant } from '@/lib/tenant/context';
 import { gymStore } from '@/lib/supabase/store';
-import { Member, MemberStatus } from '@/types';
+import { gymosRepository } from '@/lib/supabase/repository';
+import { Member, MemberStatus, MembershipPlan } from '@/types';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
@@ -44,8 +45,17 @@ export const Members: React.FC = () => {
   const [bulkCsvText, setBulkCsvText] = useState('');
   const [bulkMessage, setBulkMessage] = useState('');
 
-  const members = gymStore.getMembers(currentGym.id);
-  const plans = gymStore.getPlans(currentGym.id);
+  const [members, setMembers] = useState<Member[]>(() => gymStore.getMembers(currentGym.id));
+  const [plans, setPlans] = useState<MembershipPlan[]>(() => gymStore.getPlans(currentGym.id));
+
+  useEffect(() => {
+    gymosRepository.getMembers(currentGym.id).then((data) => {
+      if (data && data.length > 0) setMembers(data);
+    });
+    gymosRepository.getPlans(currentGym.id).then((data) => {
+      if (data && data.length > 0) setPlans(data);
+    });
+  }, [currentGym.id]);
 
   // Filter members
   const filteredMembers = members.filter((m) => {
@@ -59,11 +69,11 @@ export const Members: React.FC = () => {
     return matchesSearch && matchesStatus;
   });
 
-  const handleCreateMember = (e: React.FormEvent) => {
+  const handleCreateMember = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newFullName || !newPhone) return;
 
-    gymStore.createMember(
+    const newMember = await gymosRepository.createMember(
       currentGym.id,
       {
         full_name: newFullName,
@@ -79,6 +89,7 @@ export const Members: React.FC = () => {
       newPlanId || plans[0]?.id
     );
 
+    setMembers((prev) => [newMember, ...prev.filter((m) => m.id !== newMember.id)]);
     setIsAddModalOpen(false);
     // Reset form
     setNewFullName('');

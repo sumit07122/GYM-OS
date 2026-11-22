@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTenant } from '@/lib/tenant/context';
 import { gymStore } from '@/lib/supabase/store';
+import { gymosRepository } from '@/lib/supabase/repository';
+import { AttendanceRecord, Member } from '@/types';
 import { Button } from '@/components/ui/Button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -24,8 +26,17 @@ export const Attendance: React.FC = () => {
     message: string;
   } | null>(null);
 
-  const members = gymStore.getMembers(currentGym.id);
-  const todayAttendance = gymStore.getTodayAttendance(currentGym.id);
+  const [members, setMembers] = useState<Member[]>(() => gymStore.getMembers(currentGym.id));
+  const [todayAttendance, setTodayAttendance] = useState<AttendanceRecord[]>(() => gymStore.getTodayAttendance(currentGym.id));
+
+  useEffect(() => {
+    gymosRepository.getMembers(currentGym.id).then((data) => {
+      if (data && data.length > 0) setMembers(data);
+    });
+    gymosRepository.getTodayAttendance(currentGym.id).then((data) => {
+      if (data) setTodayAttendance(data);
+    });
+  }, [currentGym.id]);
 
   const handleManualCheckIn = (memberId: string) => {
     const res = gymStore.checkInMember(currentGym.id, memberId, 'reception_manual', currentUser.full_name);

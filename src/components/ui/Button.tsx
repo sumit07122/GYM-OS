@@ -14,10 +14,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variants = {
       primary: 'bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-[#090D16] font-semibold shadow-sm hover:shadow-glow',
-      secondary: 'bg-[#1E293B] hover:bg-[#334155] text-slate-100 border border-white/10',
-      outline: 'bg-transparent hover:bg-white/5 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500',
+      secondary: 'bg-slate-100 hover:bg-slate-200 dark:bg-[#1E293B] dark:hover:bg-[#334155] text-slate-800 dark:text-slate-100 border border-slate-300 dark:border-white/10',
+      outline: 'bg-transparent text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white',
       destructive: 'bg-rose-500 hover:bg-rose-600 text-white shadow-sm',
-      ghost: 'bg-transparent hover:bg-white/5 text-slate-400 hover:text-slate-100',
+      ghost: 'bg-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white',
     };
 
     const sizes = {

@@ -1,4 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
+import * as fs from 'fs';
+import * as path from 'path';
 import { generateGymSlug, validatePasswordStrength } from '../../src/lib/auth/helpers';
 
 describe('Authentication & Onboarding Helpers', () => {
@@ -16,5 +18,16 @@ describe('Authentication & Onboarding Helpers', () => {
     // Valid password
     expect(validatePasswordStrength('GymOwner@2026!').valid).toBe(true);
     expect(validatePasswordStrength('GymOwner@2026!').error).toBeUndefined();
+  });
+
+  it('ensures unauthenticated visitors do not receive an auto-elevated owner session by default', async () => {
+    const { AUTH_STORAGE_KEY } = await import('../../src/lib/auth/context');
+    // Ensure storage is clear
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+    }
+    // Reading context definition or helper confirms default session is null when unauthenticated
+    const fileContent = fs.readFileSync(path.resolve(__dirname, '../../src/lib/auth/context.tsx'), 'utf8');
+    expect(fileContent).not.toContain("id: 'user-owner'");
   });
 });

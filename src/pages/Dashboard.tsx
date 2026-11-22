@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTenant } from '@/lib/tenant/context';
 import { gymStore } from '@/lib/supabase/store';
+import { gymosRepository } from '@/lib/supabase/repository';
+import { Member, AttendanceRecord, Payment } from '@/types';
 import { MetricCard } from '@/components/shared/MetricCard';
 import { Button } from '@/components/ui/Button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
@@ -25,10 +27,23 @@ export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const slug = currentGym.slug;
 
-  const members = gymStore.getMembers(currentGym.id);
+  const [members, setMembers] = useState<Member[]>(() => gymStore.getMembers(currentGym.id));
+  const [todayAttendance, setTodayAttendance] = useState<AttendanceRecord[]>(() => gymStore.getTodayAttendance(currentGym.id));
+  const [payments, setPayments] = useState<Payment[]>(() => gymStore.getPayments(currentGym.id));
+
+  useEffect(() => {
+    gymosRepository.getMembers(currentGym.id).then((data) => {
+      if (data && data.length > 0) setMembers(data);
+    });
+    gymosRepository.getTodayAttendance(currentGym.id).then((data) => {
+      if (data) setTodayAttendance(data);
+    });
+    gymosRepository.getPayments(currentGym.id).then((data) => {
+      if (data && data.length > 0) setPayments(data);
+    });
+  }, [currentGym.id]);
+
   const activeMembers = members.filter(m => m.status === 'active' || m.status === 'expiring');
-  const todayAttendance = gymStore.getTodayAttendance(currentGym.id);
-  const payments = gymStore.getPayments(currentGym.id);
 
   // Financial KPIs
   const mtdRevenue = payments.reduce((acc, p) => acc + p.amount_paid, 0);

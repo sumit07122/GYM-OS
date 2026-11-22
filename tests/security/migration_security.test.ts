@@ -26,5 +26,8 @@ describe('Database Migration 0006 Security Hardening Audit', () => {
     expect(content).toContain('SECURITY DEFINER');
     expect(content).toContain('gps_geofence');
     expect(content).toContain('6371000'); // Haversine earth radius meters
+    // Must enforce that caller is either the member themselves (auth.uid() = user_id) or staff
+    expect(content).toContain('auth.uid()');
+    expect(content).toContain('v_member_user_id != auth.uid()');
   });
 });

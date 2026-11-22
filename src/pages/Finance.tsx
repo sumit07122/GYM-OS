@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTenant } from '@/lib/tenant/context';
 import { gymStore } from '@/lib/supabase/store';
-import { Payment, PaymentMethod, PaymentType } from '@/types';
+import { gymosRepository } from '@/lib/supabase/repository';
+import { Payment, PaymentMethod, PaymentType, Expense, Member } from '@/types';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
@@ -39,9 +40,21 @@ export const Finance: React.FC = () => {
   const [reference, setReference] = useState('');
   const [notes, setNotes] = useState('');
 
-  const members = gymStore.getMembers(currentGym.id);
-  const payments = gymStore.getPayments(currentGym.id);
-  const expenses = gymStore.getExpenses(currentGym.id);
+  const [members, setMembers] = useState<Member[]>(() => gymStore.getMembers(currentGym.id));
+  const [payments, setPayments] = useState<Payment[]>(() => gymStore.getPayments(currentGym.id));
+  const [expenses, setExpenses] = useState<Expense[]>(() => gymStore.getExpenses(currentGym.id));
+
+  useEffect(() => {
+    gymosRepository.getMembers(currentGym.id).then((data) => {
+      if (data && data.length > 0) setMembers(data);
+    });
+    gymosRepository.getPayments(currentGym.id).then((data) => {
+      if (data && data.length > 0) setPayments(data);
+    });
+    gymosRepository.getExpenses(currentGym.id).then((data) => {
+      if (data && data.length > 0) setExpenses(data);
+    });
+  }, [currentGym.id]);
 
   // Aggregates
   const totalCollections = payments.reduce((acc, p) => acc + p.amount_paid, 0);

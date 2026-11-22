@@ -17,7 +17,7 @@ interface AuthContextType {
   session: AuthSession | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  signIn: (email: string, password: string, role?: GymRole) => Promise<{ success: boolean; error?: string }>;
+  signIn: (email: string, password: string, role?: GymRole) => Promise<{ success: boolean; error?: string; gymSlug?: string; role?: GymRole }>;
   signUpOwner: (params: {
     fullName: string;
     email: string;
@@ -42,21 +42,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch {
       // Storage unavailable
     }
-    // Default active session for initial seamless evaluation
-    const gym = gymStore.getAllGyms()[0];
-    return {
-      user: {
-        id: 'user-owner',
-        email: 'owner@olympiafitness.in',
-        full_name: 'Vikramaditya Singhania',
-        phone: '+91 98201 12345',
-        is_active: true,
-        created_at: new Date().toISOString(),
-      },
-      role: 'gym_owner',
-      gymId: gym ? gym.id : 'gym-001-olympia',
-      gymSlug: gym ? gym.slug : 'olympia-fitness',
-    };
+    // Secure by default: unauthenticated visitors must log in
+    return null;
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -75,7 +62,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signIn = async (email: string, password: string, requestedRole?: GymRole): Promise<{ success: boolean; error?: string }> => {
+  const signIn = async (
+    email: string,
+    password: string,
+    requestedRole?: GymRole
+  ): Promise<{ success: boolean; error?: string; gymSlug?: string; role?: GymRole }> => {
     setIsLoading(true);
     try {
       // 1. If real Supabase credentials are configured in .env, attempt real Supabase Auth
@@ -113,7 +104,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           };
           persistSession(newSession);
           setIsLoading(false);
-          return { success: true };
+          return { success: true, gymSlug, role: gymRole };
         }
       }
 
@@ -137,13 +128,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         };
         persistSession(newSession);
         setIsLoading(false);
-        return { success: true };
+        return { success: true, gymSlug: gym.slug, role: 'member' };
       }
 
       // Default to Gym Owner
       const newSession: AuthSession = {
         user: {
-          id: 'user-owner',
+          id: 'owner-authenticated-session',
           email: email.trim().toLowerCase(),
           full_name: 'Vikramaditya Singhania',
           phone: '+91 98201 12345',
@@ -156,7 +147,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
       persistSession(newSession);
       setIsLoading(false);
-      return { success: true };
+      return { success: true, gymSlug: gym.slug, role: 'gym_owner' };
     } catch (err: any) {
       setIsLoading(false);
       return { success: false, error: err.message || 'An error occurred during authentication.' };

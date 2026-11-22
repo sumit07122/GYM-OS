@@ -107,7 +107,7 @@ export const Expenses: React.FC = () => {
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#0B0F19] border-b border-white/10 text-slate-400 uppercase font-semibold">
+              <thead className="bg-slate-50 dark:bg-[#0B0F19] border-b border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 uppercase font-semibold">
                 <tr>
                   <th className="py-3 px-4">Date</th>
                   <th className="py-3 px-4">Category</th>
@@ -117,28 +117,28 @@ export const Expenses: React.FC = () => {
                   <th className="py-3 px-4 text-right">Amount</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 text-slate-300">
+              <tbody className="divide-y divide-slate-200 dark:divide-white/5 text-slate-700 dark:text-slate-300">
                 {expenses.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="py-12 text-center text-slate-500">
+                    <td colSpan={6} className="py-12 text-center text-slate-500 dark:text-slate-400">
                       No expenses logged yet.
                     </td>
                   </tr>
                 ) : (
                   expenses.map((exp) => (
-                    <tr key={exp.id} className="hover:bg-white/5">
-                      <td className="py-3 px-4 font-mono text-slate-400">{formatDate(exp.date)}</td>
-                      <td className="py-3 px-4 font-semibold text-slate-100">{exp.category}</td>
-                      <td className="py-3 px-4 text-slate-300">{exp.vendor_name || '-'}</td>
+                    <tr key={exp.id} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                      <td className="py-3 px-4 font-mono text-slate-500 dark:text-slate-400">{formatDate(exp.date)}</td>
+                      <td className="py-3 px-4 font-semibold text-slate-900 dark:text-slate-100">{exp.category}</td>
+                      <td className="py-3 px-4 text-slate-700 dark:text-slate-300">{exp.vendor_name || '-'}</td>
                       <td className="py-3 px-4">
                         <Badge variant="neutral" className="uppercase text-[9px]">
                           {exp.payment_method}
                         </Badge>
                       </td>
-                      <td className="py-3 px-4 text-slate-400 italic text-[11px] max-w-xs truncate">
+                      <td className="py-3 px-4 text-slate-500 dark:text-slate-400 italic text-[11px] max-w-xs truncate">
                         {exp.notes || '-'}
                       </td>
-                      <td className="py-3 px-4 text-right font-mono font-bold text-rose-400">
+                      <td className="py-3 px-4 text-right font-mono font-bold text-rose-500 dark:text-rose-400">
                         {formatINR(exp.amount)}
                       </td>
                     </tr>

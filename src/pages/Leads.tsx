@@ -96,27 +96,27 @@ export const Leads: React.FC = () => {
           const stageLeads = leads.filter((l) => l.status === stage.key);
 
           return (
-            <div key={stage.key} className="bg-[#111827] border border-white/10 rounded-xl p-3 flex flex-col h-[70vh]">
+            <div key={stage.key} className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-white/10 rounded-xl p-3 flex flex-col h-[70vh] shadow-sm dark:shadow-none">
               {/* Stage Header */}
               <div className={`p-2.5 rounded-lg border flex items-center justify-between mb-3 ${stage.color}`}>
-                <span className="text-xs font-bold text-white uppercase tracking-wider">{stage.label}</span>
-                <span className="text-xs font-mono font-bold text-slate-300">{stageLeads.length}</span>
+                <span className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">{stage.label}</span>
+                <span className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">{stageLeads.length}</span>
               </div>
 
               {/* Lead Cards List */}
               <div className="flex-1 overflow-y-auto space-y-2.5 pr-1">
                 {stageLeads.length === 0 ? (
-                  <div className="text-center py-8 text-[11px] text-slate-500 border border-dashed border-white/5 rounded-lg">
+                  <div className="text-center py-8 text-[11px] text-slate-500 border border-dashed border-slate-200 dark:border-white/5 rounded-lg">
                     No leads in this stage
                   </div>
                 ) : (
                   stageLeads.map((lead) => (
                     <div
                       key={lead.id}
-                      className="p-3 bg-[#0B0F19] border border-white/10 rounded-lg hover:border-emerald-500/40 transition-all space-y-2 text-xs"
+                      className="p-3 bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-white/10 rounded-lg hover:border-emerald-500/40 transition-all space-y-2 text-xs"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold text-slate-100">{lead.full_name}</span>
+                        <span className="font-semibold text-slate-900 dark:text-slate-100">{lead.full_name}</span>
                         <Badge variant="neutral" className="text-[9px]">
                           {lead.source}
                         </Badge>
