@@ -1,6 +1,10 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { Login } from '@/pages/Login';
+import { RegisterOwner } from '@/pages/RegisterOwner';
+import { ForgotPassword } from '@/pages/ForgotPassword';
 import { Dashboard } from '@/pages/Dashboard';
 import { Members } from '@/pages/Members';
 import { Attendance } from '@/pages/Attendance';
@@ -18,11 +22,23 @@ import { Settings } from '@/pages/Settings';
 export const AppRouter: React.FC = () => {
   return (
     <Routes>
+      {/* Public Authentication Routes */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<RegisterOwner />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+
       {/* Root redirects to default gym dashboard */}
       <Route path="/" element={<Navigate to="/gym/olympia-fitness/dashboard" replace />} />
 
-      {/* Main Tenant ERP Application Shell */}
-      <Route path="/gym/:slug" element={<DashboardLayout />}>
+      {/* Main Protected Tenant ERP Application Shell */}
+      <Route
+        path="/gym/:slug"
+        element={
+          <AuthGuard>
+            <DashboardLayout />
+          </AuthGuard>
+        }
+      >
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="members" element={<Members />} />
@@ -40,7 +56,14 @@ export const AppRouter: React.FC = () => {
       </Route>
 
       {/* Platform SaaS Super Admin */}
-      <Route path="/super-admin" element={<DashboardLayout />}>
+      <Route
+        path="/super-admin"
+        element={
+          <AuthGuard allowedRoles={['platform_super_admin', 'gym_owner']}>
+            <DashboardLayout />
+          </AuthGuard>
+        }
+      >
         <Route index element={<SuperAdmin />} />
       </Route>
 
