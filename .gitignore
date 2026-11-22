@@ -30,3 +30,4 @@ dist-ssr
 
 # Antigravity artifacts
 .gemini/
+.superpowers/
