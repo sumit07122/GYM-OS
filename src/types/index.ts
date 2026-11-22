@@ -1,6 +1,6 @@
 // GymOS Enterprise TypeScript Type Definitions
 
-export type GymRole = 'gym_owner' | 'gym_manager' | 'receptionist' | 'trainer' | 'member' | 'platform_super_admin';
+export type GymRole = 'owner' | 'member' | 'gym_owner' | 'gym_manager' | 'receptionist' | 'trainer' | 'platform_super_admin';
 
 export type MemberStatus = 'active' | 'expiring' | 'expired' | 'frozen' | 'inactive';
 
@@ -17,7 +17,7 @@ export type PaymentType =
   | 'penalty_fee' 
   | 'refund';
 
-export type AttendanceMethod = 'qr_scan' | 'reception_manual' | 'biometric' | 'mobile_app';
+export type AttendanceMethod = 'gps_geofence' | 'qr_scan' | 'reception_manual' | 'biometric' | 'mobile_app';
 
 export type LeadStatus = 'new' | 'contacted' | 'trial_scheduled' | 'trial_attended' | 'converted' | 'lost';
 
@@ -65,6 +65,11 @@ export interface GymSettings {
   attendance_qr_refresh_seconds: number;
   allow_member_portal_renewals: boolean;
   max_freeze_days_per_year: number;
+  // GPS Geofence Configuration
+  latitude: number;
+  longitude: number;
+  geofence_radius_meters: number;
+  enable_gps_attendance: boolean;
 }
 
 export interface GymBranding {
