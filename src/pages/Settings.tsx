@@ -12,6 +12,12 @@ import {
   Clock,
   Sparkles,
   CheckCircle2,
+  MapPin,
+  Navigation,
+  Radio,
+  CreditCard,
+  MessageSquare,
+  LocateFixed,
 } from 'lucide-react';
 
 export const Settings: React.FC = () => {
@@ -36,7 +42,34 @@ export const Settings: React.FC = () => {
   const [invoicePrefix, setInvoicePrefix] = useState(settings.invoice_prefix);
   const [taxRate, setTaxRate] = useState(String(settings.tax_rate_percent));
 
+  // Geofence & Auto-Attendance Form
+  const [latitude, setLatitude] = useState(String(settings.latitude ?? 19.0596));
+  const [longitude, setLongitude] = useState(String(settings.longitude ?? 72.8295));
+  const [geofenceRadius, setGeofenceRadius] = useState(String(settings.geofence_radius_meters ?? 100));
+  const [geofenceEnabled, setGeofenceEnabled] = useState(settings.geofence_attendance_enabled ?? true);
+
+  // Integrations Form
+  const [razorpayKey, setRazorpayKey] = useState(settings.razorpay_key_id || 'rzp_test_GYMOS1029384756');
+  const [whatsappPhone, setWhatsappPhone] = useState(settings.whatsapp_business_number || '+91 98200 98200');
+
   const [savedMessage, setSavedMessage] = useState('');
+
+  const handleDetectLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setLatitude(String(pos.coords.latitude.toFixed(6)));
+          setLongitude(String(pos.coords.longitude.toFixed(6)));
+          setSavedMessage('Current GPS coordinates detected and populated!');
+          setTimeout(() => setSavedMessage(''), 3000);
+        },
+        (err) => {
+          alert(`GPS detection error: ${err.message}`);
+        },
+        { enableHighAccuracy: true }
+      );
+    }
+  };
 
   const handleSaveSettings = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,6 +83,12 @@ export const Settings: React.FC = () => {
     gymStore.updateSettings(currentGym.id, {
       invoice_prefix: invoicePrefix,
       tax_rate_percent: parseFloat(taxRate) || 18,
+      latitude: parseFloat(latitude) || 19.0596,
+      longitude: parseFloat(longitude) || 72.8295,
+      geofence_radius_meters: parseInt(geofenceRadius, 10) || 100,
+      geofence_attendance_enabled: geofenceEnabled,
+      razorpay_key_id: razorpayKey,
+      whatsapp_business_number: whatsappPhone,
     });
 
     refreshTenant();
@@ -214,6 +253,101 @@ export const Settings: React.FC = () => {
                 value={taxRate}
                 onChange={(e) => setTaxRate(e.target.value)}
               />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* GPS Geofence & Auto-Attendance Perimeter */}
+        <Card className="border border-emerald-500/20">
+          <CardHeader className="border-b border-white/5 pb-3 flex flex-row items-center justify-between">
+            <CardTitle className="text-sm font-bold flex items-center gap-2">
+              <Radio className="w-4 h-4 text-emerald-400" />
+              GPS Geofence & Automated Member Attendance
+            </CardTitle>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleDetectLocation}
+              className="gap-1.5 text-xs text-emerald-400 border-emerald-500/30"
+            >
+              <LocateFixed className="w-3.5 h-3.5" />
+              Detect Current GPS
+            </Button>
+          </CardHeader>
+          <CardContent className="pt-4 space-y-4 text-xs">
+            <p className="text-slate-400 text-xs">
+              Configure the exact geographical coordinates of your gym facility. Members within this radius can automatically check in using their smartphone's GPS.
+            </p>
+
+            <div className="grid grid-cols-3 gap-4">
+              <Input
+                label="Latitude (Dec Degrees)"
+                placeholder="19.0596"
+                value={latitude}
+                onChange={(e) => setLatitude(e.target.value)}
+                required
+              />
+              <Input
+                label="Longitude (Dec Degrees)"
+                placeholder="72.8295"
+                value={longitude}
+                onChange={(e) => setLongitude(e.target.value)}
+                required
+              />
+              <Input
+                label="Geofence Radius (Meters)"
+                placeholder="100"
+                value={geofenceRadius}
+                onChange={(e) => setGeofenceRadius(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <input
+                type="checkbox"
+                id="geofenceToggle"
+                checked={geofenceEnabled}
+                onChange={(e) => setGeofenceEnabled(e.target.checked)}
+                className="w-4 h-4 text-emerald-500 rounded bg-[#0D1322] border-white/20 focus:ring-emerald-500"
+              />
+              <label htmlFor="geofenceToggle" className="text-xs text-slate-300 font-medium cursor-pointer">
+                Enable GPS Geofenced Self Check-In on Member Portal
+              </label>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Payments Gateway & WhatsApp Cloud API Integrations */}
+        <Card>
+          <CardHeader className="border-b border-white/5 pb-3">
+            <CardTitle className="text-sm font-bold flex items-center gap-2">
+              <CreditCard className="w-4 h-4 text-emerald-400" />
+              Payment Gateway & WhatsApp Cloud Integrations
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-4 space-y-4 text-xs">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Input
+                  label="Razorpay Key ID (UPI / Cards)"
+                  placeholder="rzp_live_..."
+                  value={razorpayKey}
+                  onChange={(e) => setRazorpayKey(e.target.value)}
+                />
+                <p className="text-[10px] text-slate-500 mt-1">Used to create instant UPI dynamic QR codes and checkout links.</p>
+              </div>
+
+              <div>
+                <Input
+                  label="WhatsApp Business Phone Number"
+                  placeholder="+91 98200 98200"
+                  value={whatsappPhone}
+                  onChange={(e) => setWhatsappPhone(e.target.value)}
+                />
+                <p className="text-[10px] text-slate-500 mt-1">Used to dispatch 1-click tax invoices and payment dues alerts.</p>
+              </div>
             </div>
           </CardContent>
         </Card>

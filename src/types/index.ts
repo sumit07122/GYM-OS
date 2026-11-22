@@ -70,6 +70,9 @@ export interface GymSettings {
   longitude: number;
   geofence_radius_meters: number;
   enable_gps_attendance: boolean;
+  geofence_attendance_enabled?: boolean;
+  razorpay_key_id?: string;
+  whatsapp_business_number?: string;
 }
 
 export interface GymBranding {

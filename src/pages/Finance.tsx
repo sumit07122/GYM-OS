@@ -10,6 +10,7 @@ import { Dialog } from '@/components/ui/Dialog';
 import { MetricCard } from '@/components/shared/MetricCard';
 import { formatINR, calculateGST } from '@/lib/formatting/currency';
 import { formatDateTime, formatDate } from '@/lib/formatting/dates';
+import { generateWhatsAppReceiptUrl, generateWhatsAppReminderUrl } from '@/lib/communications/whatsapp';
 import {
   Receipt,
   CreditCard,
@@ -19,6 +20,7 @@ import {
   CheckCircle2,
   DollarSign,
   TrendingUp,
+  MessageCircle,
   X,
 } from 'lucide-react';
 
@@ -412,7 +414,26 @@ export const Finance: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-2">
+            <div className="flex flex-wrap justify-end gap-2 pt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const url = generateWhatsAppReceiptUrl({
+                    phone: selectedReceipt.member?.phone || '9820098200',
+                    memberName: selectedReceipt.member?.full_name || 'Member',
+                    gymName: currentGym.name,
+                    invoiceNumber: selectedReceipt.invoice_number,
+                    amount: selectedReceipt.amount_paid,
+                    paymentMethod: selectedReceipt.payment_method,
+                  });
+                  window.open(url, '_blank');
+                }}
+                className="gap-1.5 text-emerald-400 hover:text-emerald-300 border-emerald-500/30"
+              >
+                <MessageCircle className="w-4 h-4 text-emerald-400" />
+                WhatsApp Invoice
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
